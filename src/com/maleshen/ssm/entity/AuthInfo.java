@@ -4,9 +4,6 @@ import com.maleshen.ssm.template.Flags;
 
 import java.io.Serializable;
 
-/**
- * Created by nix on 19.03.16.
- */
 public class AuthInfo implements Serializable {
     private String login = "";
     private String pass = "";

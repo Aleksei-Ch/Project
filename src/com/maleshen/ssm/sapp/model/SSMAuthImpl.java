@@ -4,7 +4,6 @@ import com.maleshen.ssm.entity.AuthInfo;
 import com.maleshen.ssm.entity.User;
 import com.maleshen.ssm.sapp.model.interfaces.SSMAuth;
 import com.maleshen.ssm.template.SsmCrypt;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 
 import java.sql.SQLException;
 
