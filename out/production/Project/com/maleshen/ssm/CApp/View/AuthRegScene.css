@@ -1,0 +1,9 @@
+.background {
+    -fx-background-color: #ffffff;
+}
+
+.textField {
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: transparent transparent #222222 transparent;
+    -fx-background-color: #ffffff;
+}
