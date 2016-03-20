@@ -2,6 +2,7 @@ package com.maleshen.ssm.capp;
 
 import com.maleshen.ssm.entity.AuthInfo;
 import com.maleshen.ssm.template.Flags;
+import com.maleshen.ssm.template.SsmCrypt;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;

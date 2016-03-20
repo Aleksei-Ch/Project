@@ -2,7 +2,7 @@ package com.maleshen.ssm.sapp;
 
 import com.maleshen.ssm.entity.AuthInfo;
 import com.maleshen.ssm.entity.User;
-import com.maleshen.ssm.sapp.model.SSMAuthNotDB;
+import com.maleshen.ssm.sapp.model.SSMAuthImpl;
 import com.maleshen.ssm.template.Flags;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -14,11 +14,8 @@ import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
-import javax.jws.soap.SOAPBinding;
-import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class SecureChatServerHandler extends SimpleChannelInboundHandler<String> {
 
@@ -56,7 +53,7 @@ public class SecureChatServerHandler extends SimpleChannelInboundHandler<String>
 
             //Some Auth logic
             if (authInfo != null) {
-                User user = (new SSMAuthNotDB()).getAuthentication(authInfo);
+                User user = (new SSMAuthImpl()).getAuthentication(authInfo);
                 if (user != null) {
                     users.put(ctx.channel(), user);
                     ctx.channel().writeAndFlush(Flags.AUTH_GOOD + "\n");

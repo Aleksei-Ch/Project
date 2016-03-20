@@ -1,5 +1,6 @@
 package com.maleshen.ssm.sapp;
 
+import com.maleshen.ssm.sapp.model.SSMSimpleDataBaseConnector;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -21,6 +22,7 @@ public final class SecureChatServer {
 
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
+        SSMSimpleDataBaseConnector ssmSimpleDataBaseConnector = new SSMSimpleDataBaseConnector();
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
