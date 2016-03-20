@@ -10,6 +10,7 @@ public class SsmCrypt {
     private static int workload = 4;
 
     //Getting MD5
+    //It's just for identification message flags
     static String getMD5(String s) {
         MessageDigest messageDigest = null;
         byte[] digest = new byte[0];
@@ -39,6 +40,7 @@ public class SsmCrypt {
         return s != null ? BCrypt.hashpw(s, salt) : null;
     }
 
+    //Check authority password
     public static boolean check(String s1, String s2) {
         return !(s1 == null || s2 == null) && BCrypt.checkpw(s1, s2);
     }

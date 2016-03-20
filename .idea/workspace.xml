@@ -58,20 +58,22 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SsmCrypt.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="SsmCrypt.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/maleshen/ssm/template/SsmCrypt.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-273">
-              <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+            <state relative-caret-position="378">
+              <caret line="42" column="30" selection-start-line="42" selection-start-column="30" selection-end-line="42" selection-end-column="30" />
               <folding>
-                <element signature="e#1163#1164#0" expanded="true" />
-                <element signature="e#1239#1240#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+                <element signature="method#getMD5#0;class#SsmCrypt#0" expanded="false" />
+                <element signature="e#1243#1244#0" expanded="true" />
+                <element signature="e#1319#1320#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SSMAuthImpl.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="SSMAuthImpl.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/maleshen/ssm/sapp/model/SSMAuthImpl.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="342">
@@ -865,12 +867,12 @@
       <workItem from="1458472735525" duration="19000" />
       <workItem from="1458472771791" duration="102000" />
       <workItem from="1458472938368" duration="177000" />
-      <workItem from="1458473670704" duration="7366000" />
+      <workItem from="1458473670704" duration="7547000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41243000" />
+    <option name="totallyTimeSpent" value="41424000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-2" y="0" width="1924" height="1039" extended-state="6" />
@@ -1264,16 +1266,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/maleshen/ssm/sapp/model/SSMAuthImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="21" column="74" selection-start-line="21" selection-start-column="74" selection-end-line="21" selection-end-column="74" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/maleshen/ssm/sapp/SecureChatServerHandler.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="143">
@@ -1294,11 +1286,23 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/maleshen/ssm/template/SsmCrypt.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-273">
-          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+        <state relative-caret-position="378">
+          <caret line="42" column="30" selection-start-line="42" selection-start-column="30" selection-end-line="42" selection-end-column="30" />
           <folding>
-            <element signature="e#1163#1164#0" expanded="true" />
-            <element signature="e#1239#1240#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="method#getMD5#0;class#SsmCrypt#0" expanded="false" />
+            <element signature="e#1243#1244#0" expanded="true" />
+            <element signature="e#1319#1320#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/maleshen/ssm/sapp/model/SSMAuthImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="342">
+          <caret line="21" column="74" selection-start-line="21" selection-start-column="74" selection-end-line="21" selection-end-column="74" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
