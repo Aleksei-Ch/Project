@@ -1,5 +1,6 @@
 package com.maleshen.ssm.capp;
 
+import com.maleshen.ssm.entity.User;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,6 +11,7 @@ import java.io.IOException;
 
 public class ClientApp extends Application {
     public static Stage primaryStage;
+    public static User currentUser;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -17,7 +19,7 @@ public class ClientApp extends Application {
         authInit();
     }
 
-    private void authInit(){
+    private void authInit() {
         //Set some window properties
         primaryStage.setTitle("Simple & Safety");
         primaryStage.setResizable(false);

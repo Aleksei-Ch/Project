@@ -80,4 +80,17 @@ public class AuthRegSceneController extends DefaultSceneController {
             }
         }
     }
+
+    //TODO. Registration user.
+    @FXML
+    private void regInit(){
+        loginPage.setVisible(false);
+        registrationPage.setVisible(true);
+    }
+
+    @FXML
+    private void regCancel(){
+        registrationPage.setVisible(false);
+        loginPage.setVisible(true);
+    }
 }

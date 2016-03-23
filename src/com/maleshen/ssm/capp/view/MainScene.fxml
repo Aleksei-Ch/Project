@@ -14,30 +14,26 @@
     <children>
         <AnchorPane prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #DDDDDD;" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <Label layoutX="80.0" layoutY="19.0" prefHeight="20.0" prefWidth="100.0" text="Name">
+                <Pane blendMode="SRC_ATOP" layoutX="14.0" layoutY="20.0" prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: #000; -fx-background-radius: 100;">
+               <children>
+                        <ImageView fx:id="avatar" blendMode="SRC_ATOP" depthTest="ENABLE" fitHeight="60.0" fitWidth="60.0" onMouseClicked="#initialize" preserveRatio="true" />
+               </children>
+                </Pane>
+                <Label fx:id="name" layoutX="80.0" layoutY="19.0" prefHeight="20.0" prefWidth="100.0" text="Name">
                     <font>
                         <Font name="Tahoma" size="12.0" />
                     </font>
                 </Label>
-                <Label alignment="TOP_LEFT" layoutX="80.0" layoutY="64.0" prefHeight="15.0" prefWidth="100.0" text="login">
+                <Label fx:id="login" alignment="TOP_LEFT" layoutX="80.0" layoutY="64.0" prefHeight="15.0" prefWidth="100.0" text="login">
                     <font>
                         <Font name="Tahoma Bold" size="14.0" />
                     </font>
                 </Label>
-                <Label layoutX="80.0" layoutY="41.0" prefHeight="20.0" prefWidth="100.0" text="Lastname">
+                <Label fx:id="lastName" layoutX="80.0" layoutY="41.0" prefHeight="20.0" prefWidth="100.0" text="Lastname">
                     <font>
                         <Font name="Tahoma" size="12.0" />
                     </font>
                 </Label>
-                <Pane blendMode="SRC_ATOP" layoutX="14.0" layoutY="20.0" prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: #000; -fx-background-radius: 100;">
-                    <children>
-                        <ImageView blendMode="SRC_ATOP" depthTest="ENABLE" fitHeight="60.0" fitWidth="60.0" preserveRatio="true">
-                            <image>
-                                <Image url="@noav.png" />
-                            </image>
-                        </ImageView>
-                    </children>
-                </Pane>
             </children>
         </AnchorPane>
         <AnchorPane layoutY="470.0" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: #DDDDDD;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
@@ -53,38 +49,26 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <ImageView fitHeight="30.0" fitWidth="30.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
-                            <GridPane.margin>
-                                <Insets left="10.0" />
-                            </GridPane.margin>
-                            <image>
-                                <Image url="@add.png" />
-                            </image>
-                        </ImageView>
-                        <ImageView fitHeight="30.0" fitWidth="30.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
-                            <image>
-                                <Image url="@settings.png" />
-                            </image>
-                            <GridPane.margin>
-                                <Insets left="10.0" />
-                            </GridPane.margin>
-                        </ImageView>
-                        <ImageView fitHeight="30.0" fitWidth="30.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
-                            <image>
-                                <Image url="@history.png" />
-                            </image>
-                            <GridPane.margin>
-                                <Insets left="10.0" />
-                            </GridPane.margin>
-                        </ImageView>
-                        <ImageView fitHeight="30.0" fitWidth="30.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
-                            <image>
-                                <Image url="@exit.png" />
-                            </image>
-                            <GridPane.margin>
-                                <Insets left="10.0" />
-                            </GridPane.margin>
-                        </ImageView>
+                  <Button fx:id="add" alignment="CENTER" mnemonicParsing="false" text="A" textAlignment="CENTER">
+                     <GridPane.margin>
+                        <Insets left="12.0" />
+                     </GridPane.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" text="H" GridPane.columnIndex="1">
+                     <GridPane.margin>
+                        <Insets left="12.0" />
+                     </GridPane.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" text="E" GridPane.columnIndex="3">
+                     <GridPane.margin>
+                        <Insets left="12.0" />
+                     </GridPane.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" text="S" GridPane.columnIndex="2">
+                     <GridPane.margin>
+                        <Insets left="12.0" />
+                     </GridPane.margin>
+                  </Button>
                     </children>
                 </GridPane>
             </children>

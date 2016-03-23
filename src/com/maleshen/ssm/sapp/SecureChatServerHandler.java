@@ -6,6 +6,7 @@ import com.maleshen.ssm.sapp.model.SSMAuthImpl;
 import com.maleshen.ssm.template.Flags;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
@@ -17,7 +18,7 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SecureChatServerHandler extends SimpleChannelInboundHandler<String> {
+public class SecureChatServerHandler extends ChannelInboundHandlerAdapter {
 
     static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
     static final Map<Channel, User> users = new HashMap<>();
@@ -45,24 +46,26 @@ public class SecureChatServerHandler extends SimpleChannelInboundHandler<String>
     }
 
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+    public void channelRead(ChannelHandlerContext ctx, Object msgg) throws Exception {
         //Look if authorized
+        String msg = (String) msgg;
         if (!users.keySet().contains(ctx.channel())) {
             //Trying to get auth
-            AuthInfo authInfo = AuthInfo.getFromString(msg);
+            AuthInfo authInfo = AuthInfo.getFromString((String) msgg);
 
             //Some Auth logic
             if (authInfo != null) {
                 User user = (new SSMAuthImpl()).getAuthentication(authInfo);
                 if (user != null) {
                     users.put(ctx.channel(), user);
-                    ctx.channel().writeAndFlush(Flags.AUTH_GOOD + "\n");
+                    ctx.channel().writeAndFlush(user.toString() + "\n");
                 } else {
                     ctx.channel().writeAndFlush(Flags.AUTH_BAD + "\n");
                 }
             }
         }
-        //Some chat code
+
+        //TODO GET CHAT HERE.
         else {
             //Look for unicast/multicast flag in msg
             if (msg.split(" ")[0].equals(Flags.UNICAST_MSG)) {
