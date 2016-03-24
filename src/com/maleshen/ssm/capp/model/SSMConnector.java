@@ -1,6 +1,7 @@
 package com.maleshen.ssm.capp.model;
 
 import com.maleshen.ssm.entity.AuthInfo;
+import com.maleshen.ssm.entity.User;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -15,7 +16,9 @@ import java.util.concurrent.TimeUnit;
 
 public class SSMConnector {
     static Boolean authenticated = false;
+    static Boolean registered = false;
     static Boolean answered = false;
+
     static String HOST = "";
     static int PORT = 0;
     private static Channel ch;
@@ -44,6 +47,21 @@ public class SSMConnector {
         } while (!answered);
 
         return authenticated;
+    }
+
+    private static boolean registrate(User user, Channel ch) throws InterruptedException {
+
+        answered = false;
+        ch.writeAndFlush(user.getRegInfo() + "\n");
+
+        //Waiting for answer.
+        do {
+            if (!answered) {
+                TimeUnit.SECONDS.sleep(1);
+            }
+        } while (!answered);
+
+        return registered;
     }
 
     /* This method try to establishing connection with server
@@ -123,6 +141,34 @@ public class SSMConnector {
 //            if (lastWriteFuture != null) {
 //                lastWriteFuture.sync();
 //            }
+        } catch (Exception e) {
+            return 2;
+        } finally {
+            // The connection is closed automatically on shutdown.
+            group.shutdownGracefully();
+        }
+    }
+
+    public static int establishingConnection(User user, String host, int port) throws Exception {
+
+        HOST = host;
+        PORT = port;
+        init();
+
+        try {
+            SslContext sslCtx = SslContextBuilder.forClient()
+                    .trustManager(InsecureTrustManagerFactory.INSTANCE).build();
+
+            b.group(group)
+                    .channel(NioSocketChannel.class)
+                    .handler(new SSMConnectorInitializer(sslCtx));
+
+            ch = b.connect(HOST, PORT).sync().channel();
+
+            if (registrate(user, ch)){
+                return 0;
+            }
+            return 1;
         } catch (Exception e) {
             return 2;
         } finally {

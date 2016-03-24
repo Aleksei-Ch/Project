@@ -12,17 +12,25 @@ class SSMConnectorHandler extends SimpleChannelInboundHandler<String> {
     public void channelRead0(ChannelHandlerContext ctx, String msg){
         //Auth not complete
         if (!SSMConnector.authenticated) {
-            if (msg.equals(Flags.AUTH_BAD)) {
+
+            if (msg.startsWith(Flags.AUTH_BAD) ||
+                    msg.startsWith(Flags.REGFAULT)) {
                 SSMConnector.answered = true;
             }
-            //Auth complete
+
+            //Auth or registration complete
             if (msg.startsWith(Flags.USER)) {
                 SSMConnector.authenticated = true;
                 SSMConnector.answered = true;
+                SSMConnector.registered = true;
 
                 //Parsing user from result
                 ClientApp.currentUser = User.getFromString(msg);
+
+                //TODO. Some ECHO msg.
+                ctx.channel().writeAndFlush("Hello!\n");
             }
+
         }
         //TODO. Chat.
         else {

@@ -9,6 +9,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class User {
+    private static final String SPLITTER = "<SPL>";
+    private final Format DATETOSTR = new SimpleDateFormat("MMMM d, yyyy");
+    private static final DateFormat DATEFROMSTR = new SimpleDateFormat("MMMM d, yyyy");
+
     private Integer id;
     private String login;
     private String pass;
@@ -98,33 +102,24 @@ public class User {
     }
 
 
-    /*  Return user string implementation
-    *   Pattern:
-    *   FLAG<SPL>id<<SPL>login<SPL>name<SPL>lastName<SPL>birthDate
-    *   <SPL> - splitter
-     */
     @Override
     public String toString(){
 
-        String splitter = "<SPL>";
-
-        Format formatter = new SimpleDateFormat("MMMM d, yyyy");
-
         return Flags.USER +
-                splitter +
+                SPLITTER +
                 getId() +
-                splitter +
+                SPLITTER +
                 getLogin() +
-                splitter +
+                SPLITTER +
                 getName() +
-                splitter +
+                SPLITTER +
                 getLastName() +
-                splitter +
-                formatter.format(getBirthDate());
+                SPLITTER +
+                DATETOSTR.format(getBirthDate());
     }
 
     /*  Parse user from string representation of entity
-    *   from upper metod.
+    *   from upper method.
     *   @param String representation of User
     *       User.getFromString((new User()).toString) must equals new User();
     *   @return null if input string not contains pattern
@@ -132,26 +127,72 @@ public class User {
      */
     public static User getFromString(String user){
 
-        String splitter = "<SPL>"; //Pattern like in toString()
-
-        if (user.split(splitter).length == 6
-                && user.split(splitter)[0].equals(Flags.USER)){
+        if (user.split(SPLITTER).length == 6
+                && user.split(SPLITTER)[0].equals(Flags.USER)){
 
             //Try parse birthDate
             //Format: "January 2, 2010"
-            DateFormat format = new SimpleDateFormat("MMMM d, yyyy");
             Date birthdate;
 
             try {
-                birthdate = format.parse(user.split(splitter)[5]);
+                birthdate = DATEFROMSTR.parse(user.split(SPLITTER)[5]);
             } catch (ParseException e) {
                 birthdate = new Date();
             }
 
-            return new User(Integer.parseInt(user.split(splitter)[1]), //id
-                    user.split(splitter)[2],         //login
-                    user.split(splitter)[3],         //name
-                    user.split(splitter)[4],         //lastName
+            return new User(Integer.parseInt(user.split(SPLITTER)[1]), //id
+                    user.split(SPLITTER)[2],         //login
+                    user.split(SPLITTER)[3],         //name
+                    user.split(SPLITTER)[4],         //lastName
+                    birthdate);                      //birthDate
+        }
+        return null;
+    }
+
+    /*  Return string representation of user reg info
+    *   Like toString(), but with pass and without userID
+    *   FLAG.REGME
+     */
+    public String getRegInfo(){
+
+        return Flags.REGME +
+                SPLITTER +
+                getLogin() +
+                SPLITTER +
+                getPass() +
+                SPLITTER +
+                getName() +
+                SPLITTER +
+                getLastName() +
+                SPLITTER +
+                DATETOSTR.format(getBirthDate());
+    }
+
+    /*  Parse user from string representation of regInfo
+    *   from upper method.
+    *   @param String representation of regInfo
+    *   @return null if input string not contains pattern
+    *           Parsed user if all ok.
+    */
+    public static User getUserFromRegInfo(String regInfo){
+
+        if (regInfo.split(SPLITTER).length == 6
+                && regInfo.split(SPLITTER)[0].equals(Flags.REGME)){
+
+            //Try parse birthDate
+            //Format: "January 2, 2010"
+            Date birthdate;
+
+            try {
+                birthdate = DATEFROMSTR.parse(regInfo.split(SPLITTER)[5]);
+            } catch (ParseException e) {
+                birthdate = new Date();
+            }
+
+            return new User(regInfo.split(SPLITTER)[1], //login
+                    regInfo.split(SPLITTER)[2],         //pass
+                    regInfo.split(SPLITTER)[3],         //name
+                    regInfo.split(SPLITTER)[4],         //lastName
                     birthdate);                      //birthDate
         }
         return null;

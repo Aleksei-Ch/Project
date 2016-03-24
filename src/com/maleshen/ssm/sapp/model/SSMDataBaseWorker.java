@@ -10,7 +10,7 @@ import java.util.Date;
 
 public class SSMDataBaseWorker {
     private static final String GET_USER_BY_LOGIN = "SELECT * FROM users WHERE login = ?";
-    private static final String USER_REGISTRATION = "INSERT INTO users VALUES (?,?,?,?,?)";
+    private static final String USER_REGISTRATION = "INSERT INTO users(login, hash_pass, name, lastname, birthdate) VALUES (?,?,?,?,?)";
 
     private static SSMDataBaseConnector ssmDataBaseConnector = new SSMSimpleDataBaseConnector();
     private static ResultSet resultSet;
@@ -43,18 +43,20 @@ public class SSMDataBaseWorker {
     *           user with userID if added.
      */
     public static User registerUser(User user) throws ClassNotFoundException, SQLException {
+
+        java.sql.Date bd = new java.sql.Date(user.getBirthDate().getDate());
+
         PreparedStatement preparedStatement = (PreparedStatement) ssmDataBaseConnector.getConnection()
                 .prepareStatement(USER_REGISTRATION);
         preparedStatement.setString(1, user.getLogin());
         preparedStatement.setString(2, user.getPass());
         preparedStatement.setString(3, user.getName());
         preparedStatement.setString(4, user.getLastName());
-        preparedStatement.setDate(5, (java.sql.Date) user.getBirthDate());
+        preparedStatement.setDate(5, bd);
 
-        if (preparedStatement.execute()){
-            return getUserByLogin(user.getLogin());
-        }
+        preparedStatement.execute();
 
-        return null;
+        return getUserByLogin(user.getLogin());
+
     }
 }

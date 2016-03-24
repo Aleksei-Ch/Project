@@ -3,6 +3,7 @@ package com.maleshen.ssm.sapp;
 import com.maleshen.ssm.entity.AuthInfo;
 import com.maleshen.ssm.entity.User;
 import com.maleshen.ssm.sapp.model.SSMAuthImpl;
+import com.maleshen.ssm.sapp.model.SSMDataBaseWorker;
 import com.maleshen.ssm.template.Flags;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -15,12 +16,15 @@ import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
+import javax.jws.soap.SOAPBinding;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SecureChatServerHandler extends ChannelInboundHandlerAdapter {
+public class SecureChatServerHandler extends SimpleChannelInboundHandler<String>{
 
+    //All connections
     static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    //Authorized users
     static final Map<Channel, User> users = new HashMap<>();
 
     @Override
@@ -31,31 +35,25 @@ public class SecureChatServerHandler extends ChannelInboundHandlerAdapter {
                 new GenericFutureListener<Future<Channel>>() {
                     @Override
                     public void operationComplete(Future<Channel> future) throws Exception {
-                        //First time Hello msg
-
-//                        ctx.writeAndFlush(
-//                                "Welcome to " + InetAddress.getLocalHost().getHostName() + " secure chat service!\n");
-//                        ctx.writeAndFlush(
-//                                "Your session is protected by " +
-//                                        ctx.pipeline().get(SslHandler.class).engine().getSession().getCipherSuite() +
-//                                        " cipher suite.\n");
-
                         channels.add(ctx.channel());
                     }
                 });
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msgg) throws Exception {
-        //Look if authorized
-        String msg = (String) msgg;
-        if (!users.keySet().contains(ctx.channel())) {
-            //Trying to get auth
-            AuthInfo authInfo = AuthInfo.getFromString((String) msgg);
+    public void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
 
-            //Some Auth logic
-            if (authInfo != null) {
-                User user = (new SSMAuthImpl()).getAuthentication(authInfo);
+        //Look if chanel not authorized
+        //Then do authorization or registration user.
+        if (!users.keySet().contains(ctx.channel())) {
+
+            //Look for authentication request
+            if (msg.startsWith(Flags.AUTH_REQ)) {
+
+                //Trying to get auth
+                User user = AuthInfo.getFromString(msg) != null ?
+                        (new SSMAuthImpl()).getAuthentication(AuthInfo.getFromString(msg)) : null;
+
                 if (user != null) {
                     users.put(ctx.channel(), user);
                     ctx.channel().writeAndFlush(user.toString() + "\n");
@@ -63,6 +61,24 @@ public class SecureChatServerHandler extends ChannelInboundHandlerAdapter {
                     ctx.channel().writeAndFlush(Flags.AUTH_BAD + "\n");
                 }
             }
+
+            //If msg is not authinfo - it must be registration info.
+            if (msg.startsWith(Flags.REGME)){
+
+                //Parse msg for full reginfo
+                User userFromReq = User.getUserFromRegInfo(msg);
+                if (userFromReq != null){
+                    User newUser = SSMDataBaseWorker.registerUser(userFromReq);
+                    ctx.channel().writeAndFlush(newUser != null ?
+                            newUser.toString() + "\n" : Flags.REGFAULT + "\n");
+                }
+            }
+
+            //Not authorized, not authInfo, not regInfo - broken msg.
+            else {
+                ctx.channel().writeAndFlush(Flags.MSG_BROKEN + "\n");
+            }
+
         }
 
         //TODO GET CHAT HERE.
