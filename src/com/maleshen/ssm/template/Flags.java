@@ -11,4 +11,6 @@ public class Flags {
     //Messages flags
     public static final String UNICAST_MSG = SsmCrypt.getMD5("unicast");
     public static final String MULTICAST_MSG = SsmCrypt.getMD5("multicast");
+    public static final String GET_CONTACTS = SsmCrypt.getMD5("get_contacts");
+
 }

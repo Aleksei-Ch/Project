@@ -2,6 +2,8 @@ package com.maleshen.ssm.capp;
 
 import com.maleshen.ssm.entity.User;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,6 +14,8 @@ import java.io.IOException;
 public class ClientApp extends Application {
     public static Stage primaryStage;
     public static User currentUser;
+    public static ObservableList<User> contactList;
+
 
     @Override
     public void start(Stage primaryStage) throws Exception {

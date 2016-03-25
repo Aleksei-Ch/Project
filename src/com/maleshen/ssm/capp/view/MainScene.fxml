@@ -12,6 +12,11 @@
 
 <AnchorPane maxHeight="500.0" maxWidth="700.0" minHeight="500.0" minWidth="700.0" prefHeight="500.0" prefWidth="700.0" snapToPixel="false" styleClass="background" stylesheets="@style/MainScene.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maleshen.ssm.capp.view.MainSceneController">
     <children>
+      <TableView fx:id="contacts" layoutY="73.0" prefHeight="400.0" prefWidth="200.0">
+        <columns>
+          <TableColumn fx:id="contactName" editable="false" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" resizable="false" text="C1" />
+        </columns>
+      </TableView>
         <AnchorPane prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #DDDDDD;" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <Pane blendMode="SRC_ATOP" layoutX="14.0" layoutY="20.0" prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: #000; -fx-background-radius: 100;">
@@ -49,7 +54,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                  <Button fx:id="add" alignment="CENTER" mnemonicParsing="false" styleClass="menuButton" textAlignment="CENTER">
+                  <Button fx:id="add" alignment="CENTER" mnemonicParsing="false" onAction="#initialize" styleClass="menuButton" textAlignment="CENTER">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>
@@ -73,7 +78,6 @@
                 </GridPane>
             </children>
         </AnchorPane>
-        <ListView focusTraversable="false" layoutY="100.0" prefHeight="370.0" prefWidth="200.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="100.0" />
         <AnchorPane layoutX="200.0" prefHeight="500.0" prefWidth="500.0" style="-fx-background-color: #FFF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <TextField alignment="CENTER" editable="false" focusTraversable="false" layoutX="57.0" layoutY="77.0" prefHeight="44.0" prefWidth="407.0" style="-fx-background-color: #FFF;" text="Welcome to Simple Safety Messenger." AnchorPane.leftAnchor="57.0" AnchorPane.rightAnchor="36.0">

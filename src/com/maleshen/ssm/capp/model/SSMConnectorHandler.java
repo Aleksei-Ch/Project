@@ -1,10 +1,13 @@
 package com.maleshen.ssm.capp.model;
 
 import com.maleshen.ssm.capp.ClientApp;
+import com.maleshen.ssm.capp.view.MainSceneController;
+import com.maleshen.ssm.entity.ArrayListExt;
 import com.maleshen.ssm.entity.User;
 import com.maleshen.ssm.template.Flags;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import javafx.collections.FXCollections;
 
 class SSMConnectorHandler extends SimpleChannelInboundHandler<String> {
 
@@ -27,14 +30,20 @@ class SSMConnectorHandler extends SimpleChannelInboundHandler<String> {
                 //Parsing user from result
                 ClientApp.currentUser = User.getFromString(msg);
 
-                //TODO. Some ECHO msg.
-                ctx.channel().writeAndFlush("Hello!\n");
+                //Request for contacts
+                ctx.channel().writeAndFlush(Flags.GET_CONTACTS + "\n");
             }
 
         }
         //TODO. Chat.
         else {
-            System.err.println(msg);
+            //First time we need to get contact list. So look for them
+            if (msg.startsWith(Flags.GET_CONTACTS)){
+                //Init
+                ClientApp.contactList = FXCollections.observableArrayList();
+
+                ClientApp.contactList.addAll(ArrayListExt.getFromString(msg));
+            }
         }
     }
 

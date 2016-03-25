@@ -15,7 +15,7 @@ import javax.net.ssl.SSLException;
 import java.util.concurrent.TimeUnit;
 
 public class SSMConnector {
-    static Boolean authenticated = false;
+    public static Boolean authenticated = false;
     static Boolean registered = false;
     static Boolean answered = false;
 
@@ -175,5 +175,10 @@ public class SSMConnector {
             // The connection is closed automatically on shutdown.
             group.shutdownGracefully();
         }
+    }
+
+    //TODO. Autorenew contact list and other shit.
+    public static void renewData(){
+
     }
 }

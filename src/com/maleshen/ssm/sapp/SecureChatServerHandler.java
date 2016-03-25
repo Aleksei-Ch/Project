@@ -1,5 +1,6 @@
 package com.maleshen.ssm.sapp;
 
+import com.maleshen.ssm.entity.ArrayListExt;
 import com.maleshen.ssm.entity.AuthInfo;
 import com.maleshen.ssm.entity.User;
 import com.maleshen.ssm.sapp.model.SSMAuthImpl;
@@ -17,6 +18,7 @@ import io.netty.util.concurrent.GenericFutureListener;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
 import javax.jws.soap.SOAPBinding;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,49 +42,60 @@ public class SecureChatServerHandler extends SimpleChannelInboundHandler<String>
                 });
     }
 
+    private void authOrReg(ChannelHandlerContext ctx, String msg) throws SQLException, ClassNotFoundException {
+        //Look for authentication request
+        if (msg.startsWith(Flags.AUTH_REQ)) {
+            //Trying to get auth
+            User user = AuthInfo.getFromString(msg) != null ?
+                    (new SSMAuthImpl()).getAuthentication(AuthInfo.getFromString(msg)) : null;
+
+            if (user != null) {
+                users.put(ctx.channel(), user);
+                ctx.channel().writeAndFlush(user.toString() + "\n");
+            } else {
+                ctx.channel().writeAndFlush(Flags.AUTH_BAD + "\n");
+            }
+        }
+
+        //If msg is not authinfo - it must be registration info.
+        if (msg.startsWith(Flags.REGME)) {
+
+            //Parse msg for full reginfo
+            User userFromReq = User.getUserFromRegInfo(msg);
+            if (userFromReq != null) {
+                User newUser = SSMDataBaseWorker.registerUser(userFromReq);
+                ctx.channel().writeAndFlush(newUser != null ?
+                        newUser.toString() + "\n" : Flags.REGFAULT + "\n");
+            }
+        }
+        //Not authorized, not authInfo, not regInfo - broken msg.
+        else {
+            ctx.channel().writeAndFlush(Flags.MSG_BROKEN + "\n");
+        }
+    }
+
+    private void sendContacts(ChannelHandlerContext ctx) throws SQLException, ClassNotFoundException {
+
+        ArrayListExt<User> contacts = (ArrayListExt<User>) SSMDataBaseWorker.getContactList(
+                users.get(ctx.channel()).getId());
+
+        ctx.channel().writeAndFlush(contacts.toString() + "\n");
+    }
+
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
 
         //Look if chanel not authorized
         //Then do authorization or registration user.
-        if (!users.keySet().contains(ctx.channel())) {
+        if (!users.keySet().contains(ctx.channel())) { authOrReg(ctx, msg); }
 
-            //Look for authentication request
-            if (msg.startsWith(Flags.AUTH_REQ)) {
-
-                //Trying to get auth
-                User user = AuthInfo.getFromString(msg) != null ?
-                        (new SSMAuthImpl()).getAuthentication(AuthInfo.getFromString(msg)) : null;
-
-                if (user != null) {
-                    users.put(ctx.channel(), user);
-                    ctx.channel().writeAndFlush(user.toString() + "\n");
-                } else {
-                    ctx.channel().writeAndFlush(Flags.AUTH_BAD + "\n");
-                }
-            }
-
-            //If msg is not authinfo - it must be registration info.
-            if (msg.startsWith(Flags.REGME)){
-
-                //Parse msg for full reginfo
-                User userFromReq = User.getUserFromRegInfo(msg);
-                if (userFromReq != null){
-                    User newUser = SSMDataBaseWorker.registerUser(userFromReq);
-                    ctx.channel().writeAndFlush(newUser != null ?
-                            newUser.toString() + "\n" : Flags.REGFAULT + "\n");
-                }
-            }
-
-            //Not authorized, not authInfo, not regInfo - broken msg.
-            else {
-                ctx.channel().writeAndFlush(Flags.MSG_BROKEN + "\n");
-            }
-
-        }
-
-        //TODO GET CHAT HERE.
+        //Some work logic
         else {
+            //Look for request List contacts
+            if (msg.startsWith(Flags.GET_CONTACTS)){
+                sendContacts(ctx);
+            }
+
             //Look for unicast/multicast flag in msg
             if (msg.split(" ")[0].equals(Flags.UNICAST_MSG)) {
                 for (Channel c : users.keySet()) {
