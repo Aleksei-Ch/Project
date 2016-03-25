@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="500.0" maxWidth="700.0" minHeight="500.0" minWidth="700.0" prefHeight="500.0" prefWidth="700.0" snapToPixel="false" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maleshen.ssm.capp.view.MainSceneController">
+<AnchorPane maxHeight="500.0" maxWidth="700.0" minHeight="500.0" minWidth="700.0" prefHeight="500.0" prefWidth="700.0" snapToPixel="false" styleClass="background" stylesheets="@style/MainScene.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maleshen.ssm.capp.view.MainSceneController">
     <children>
         <AnchorPane prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #DDDDDD;" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -49,24 +49,24 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                  <Button fx:id="add" alignment="CENTER" mnemonicParsing="false" text="A" textAlignment="CENTER">
+                  <Button fx:id="add" alignment="CENTER" mnemonicParsing="false" styleClass="menuButton" textAlignment="CENTER">
                      <GridPane.margin>
-                        <Insets left="12.0" />
+                        <Insets />
                      </GridPane.margin>
                   </Button>
-                  <Button mnemonicParsing="false" text="H" GridPane.columnIndex="1">
+                  <Button fx:id="history" mnemonicParsing="false" styleClass="menuButton" GridPane.columnIndex="1">
                      <GridPane.margin>
-                        <Insets left="12.0" />
+                        <Insets />
                      </GridPane.margin>
                   </Button>
-                  <Button mnemonicParsing="false" text="E" GridPane.columnIndex="3">
+                  <Button fx:id="exit" mnemonicParsing="false" styleClass="menuButton" GridPane.columnIndex="3">
                      <GridPane.margin>
-                        <Insets left="12.0" />
+                        <Insets />
                      </GridPane.margin>
                   </Button>
-                  <Button mnemonicParsing="false" text="S" GridPane.columnIndex="2">
+                  <Button fx:id="settings" mnemonicParsing="false" styleClass="menuButton" GridPane.columnIndex="2">
                      <GridPane.margin>
-                        <Insets left="12.0" />
+                        <Insets />
                      </GridPane.margin>
                   </Button>
                     </children>
@@ -164,7 +164,4 @@
             </children>
         </AnchorPane>
     </children>
-    <effect>
-        <InnerShadow />
-    </effect>
 </AnchorPane>

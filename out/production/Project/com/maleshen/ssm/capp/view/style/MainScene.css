@@ -1,0 +1,9 @@
+.background {
+    -fx-background-color: #ffffff;
+}
+.menuButton{
+    -fx-pref-width: 30px;
+    -fx-pref-height: 27px;
+    -fx-max-width: 30px;
+    -fx-max-height: 27px;
+}

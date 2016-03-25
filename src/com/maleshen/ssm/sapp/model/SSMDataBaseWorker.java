@@ -2,6 +2,7 @@ package com.maleshen.ssm.sapp.model;
 
 import com.maleshen.ssm.entity.User;
 import com.maleshen.ssm.sapp.model.interfaces.SSMDataBaseConnector;
+import com.maleshen.ssm.template.SsmCrypt;
 import com.mysql.jdbc.PreparedStatement;
 
 import java.sql.ResultSet;
@@ -44,15 +45,13 @@ public class SSMDataBaseWorker {
      */
     public static User registerUser(User user) throws ClassNotFoundException, SQLException {
 
-        java.sql.Date bd = new java.sql.Date(user.getBirthDate().getDate());
-
         PreparedStatement preparedStatement = (PreparedStatement) ssmDataBaseConnector.getConnection()
                 .prepareStatement(USER_REGISTRATION);
         preparedStatement.setString(1, user.getLogin());
-        preparedStatement.setString(2, user.getPass());
+        preparedStatement.setString(2, SsmCrypt.getHashPass(user.getPass()));
         preparedStatement.setString(3, user.getName());
         preparedStatement.setString(4, user.getLastName());
-        preparedStatement.setDate(5, bd);
+        preparedStatement.setDate(5, new java.sql.Date(user.getBirthDate().getTime()));
 
         preparedStatement.execute();
 
