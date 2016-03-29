@@ -6,8 +6,8 @@ import java.sql.*;
 
 public class SSMSimpleDataBaseConnector implements SSMDataBaseConnector {
     private static final String url = "jdbc:mysql://localhost:3306/ssm";
-    private static final String user = "root";
-    private static final String password = "root";
+    private static final String user = "ssm";
+    private static final String password = "NyQign8S";
 
     // JDBC variables for opening and managing connection
     private static Connection con;

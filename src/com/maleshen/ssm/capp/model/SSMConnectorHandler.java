@@ -1,7 +1,6 @@
 package com.maleshen.ssm.capp.model;
 
 import com.maleshen.ssm.capp.ClientApp;
-import com.maleshen.ssm.capp.view.MainSceneController;
 import com.maleshen.ssm.entity.ArrayListExt;
 import com.maleshen.ssm.entity.User;
 import com.maleshen.ssm.template.Flags;
@@ -29,11 +28,7 @@ class SSMConnectorHandler extends SimpleChannelInboundHandler<String> {
 
                 //Parsing user from result
                 ClientApp.currentUser = User.getFromString(msg);
-
-                //Request for contacts
-                ctx.channel().writeAndFlush(Flags.GET_CONTACTS + "\n");
             }
-
         }
         //TODO. Chat.
         else {
@@ -41,7 +36,7 @@ class SSMConnectorHandler extends SimpleChannelInboundHandler<String> {
             if (msg.startsWith(Flags.GET_CONTACTS)){
                 //Init
                 ClientApp.contactList = FXCollections.observableArrayList();
-
+                //Fill
                 ClientApp.contactList.addAll(ArrayListExt.getFromString(msg));
             }
         }

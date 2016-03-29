@@ -2,6 +2,7 @@ package com.maleshen.ssm.capp.model;
 
 import com.maleshen.ssm.entity.AuthInfo;
 import com.maleshen.ssm.entity.User;
+import com.maleshen.ssm.template.Flags;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -23,10 +24,9 @@ public class SSMConnector {
     static int PORT = 0;
     private static Channel ch;
     private static Bootstrap b;
-    private static EventLoopGroup group;
+    public static EventLoopGroup group;
 
-    public SSMConnector() throws SSLException {
-    }
+    public SSMConnector() throws SSLException { }
 
     private static void init(){
         ch = null;
@@ -64,12 +64,12 @@ public class SSMConnector {
         return registered;
     }
 
-    /* This method try to establishing connection with server
+    /** Try to establishing connection with server and try auth user
     *
-    *   @param AuthInfo Authentication info
-    *   @param String host inet address of server
-    *   @param int port server port
-    *   @Returned value 0 if auth complete,
+    *   @param authInfo Authentication info
+    *   @param host inet address of server
+    *   @param port server port
+    *   @return  value 0 if auth complete,
     *                   1 if auth failed,
     *                   2 if connection not established
      */
@@ -89,21 +89,12 @@ public class SSMConnector {
 
             ch = b.connect(HOST, PORT).sync().channel();
 
-            // Read commands from the stdin.
-//            ChannelFuture lastWriteFuture = null;
-//            BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-
-            //Authenticate
             if (authenticate(authInfo, ch)) {
-
-                //Ok, in this point we need to do chat.
                 return 0;
             } else {
                 group.shutdownGracefully();
-                ch.close();
                 return 1;
             }
-
 //            //Some chat
 //            for (; ; ) {
 //
@@ -143,12 +134,18 @@ public class SSMConnector {
 //            }
         } catch (Exception e) {
             return 2;
-        } finally {
-            // The connection is closed automatically on shutdown.
-            group.shutdownGracefully();
         }
     }
 
+    /** Try to establishing connection with server and try registrate user
+     *
+     *   @param user User reg info
+     *   @param host inet address of server
+     *   @param port server port
+     *   @return  value 0 if registration complete,
+     *                   1 if registration failed,
+     *                   2 if connection not established
+     */
     public static int establishingConnection(User user, String host, int port) throws Exception {
 
         HOST = host;
@@ -167,18 +164,20 @@ public class SSMConnector {
 
             if (registrate(user, ch)){
                 return 0;
+            } else {
+                group.shutdownGracefully();
+                return 1;
             }
-            return 1;
         } catch (Exception e) {
             return 2;
-        } finally {
-            // The connection is closed automatically on shutdown.
-            group.shutdownGracefully();
         }
     }
 
-    //TODO. Autorenew contact list and other shit.
+    // Autorenew contact list and other shit.
     public static void renewData(){
+        //Contact list request
+        ch.writeAndFlush(Flags.GET_CONTACTS + "\n");
 
     }
+
 }

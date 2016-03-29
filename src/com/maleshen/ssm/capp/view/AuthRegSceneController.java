@@ -4,13 +4,16 @@ import com.maleshen.ssm.capp.ClientApp;
 import com.maleshen.ssm.capp.model.SSMConnector;
 import com.maleshen.ssm.entity.AuthInfo;
 import com.maleshen.ssm.entity.User;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.WindowEvent;
 
+import java.io.IOException;
 import java.time.*;
 import java.util.Date;
 
@@ -79,12 +82,7 @@ public class AuthRegSceneController extends DefaultSceneController {
             switch (code){
                 //Authenticated, open Main Window
                 case 0:
-                    FXMLLoader loader = new FXMLLoader();
-                    loader.setLocation(ClientApp.class.getResource("view/MainScene.fxml"));
-                    Parent parent = loader.load();
-
-                    primaryStage.setScene(new Scene(parent));
-                    primaryStage.show();
+                    openMain();
                     break;
                 case 1:
                     authError.setText("Error. Pls, check fields.");
@@ -142,12 +140,7 @@ public class AuthRegSceneController extends DefaultSceneController {
                     //All is Ok
                     case 0:
                         //Authenticated, open Main Window
-                        FXMLLoader loader = new FXMLLoader();
-                        loader.setLocation(ClientApp.class.getResource("view/MainScene.fxml"));
-                        Parent parent = loader.load();
-
-                        primaryStage.setScene(new Scene(parent));
-                        primaryStage.show();
+                        openMain();
                         break;
                     //Not registered
                     case 1:
@@ -164,5 +157,27 @@ public class AuthRegSceneController extends DefaultSceneController {
             }
 
         }
+    }
+
+    private void openMain() throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(ClientApp.class.getResource("view/MainScene.fxml"));
+        Parent parent = loader.load();
+
+        primaryStage.setScene(new Scene(parent));
+        primaryStage.show();
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                SSMConnector.group.shutdownGracefully();
+                System.exit(0);
+            }
+        });
+        primaryStage.setOnHiding(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                //TODO. Hide window to tray.
+            }
+        });
     }
 }

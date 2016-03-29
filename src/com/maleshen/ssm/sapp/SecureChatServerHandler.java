@@ -63,9 +63,13 @@ public class SecureChatServerHandler extends SimpleChannelInboundHandler<String>
             //Parse msg for full reginfo
             User userFromReq = User.getUserFromRegInfo(msg);
             if (userFromReq != null) {
-                User newUser = SSMDataBaseWorker.registerUser(userFromReq);
-                ctx.channel().writeAndFlush(newUser != null ?
-                        newUser.toString() + "\n" : Flags.REGFAULT + "\n");
+                try {
+                    User newUser = SSMDataBaseWorker.registerUser(userFromReq);
+                    ctx.channel().writeAndFlush(newUser != null ?
+                            newUser.toString() + "\n" : Flags.REGFAULT + "\n");
+                } catch (Exception e) {
+                    ctx.channel().writeAndFlush(Flags.REGFAULT + "\n");
+                }
             }
         }
         //Not authorized, not authInfo, not regInfo - broken msg.
@@ -76,7 +80,7 @@ public class SecureChatServerHandler extends SimpleChannelInboundHandler<String>
 
     private void sendContacts(ChannelHandlerContext ctx) throws SQLException, ClassNotFoundException {
 
-        ArrayListExt<User> contacts = (ArrayListExt<User>) SSMDataBaseWorker.getContactList(
+        ArrayListExt<User> contacts = SSMDataBaseWorker.getContactList(
                 users.get(ctx.channel()).getId());
 
         ctx.channel().writeAndFlush(contacts.toString() + "\n");
@@ -87,42 +91,40 @@ public class SecureChatServerHandler extends SimpleChannelInboundHandler<String>
 
         //Look if chanel not authorized
         //Then do authorization or registration user.
-        if (!users.keySet().contains(ctx.channel())) { authOrReg(ctx, msg); }
-
-        //Some work logic
-        else {
-            //Look for request List contacts
-            if (msg.startsWith(Flags.GET_CONTACTS)){
-                sendContacts(ctx);
-            }
-
-            //Look for unicast/multicast flag in msg
-            if (msg.split(" ")[0].equals(Flags.UNICAST_MSG)) {
-                for (Channel c : users.keySet()) {
-                    if (users.get(c).getLogin().equals(msg.split(" ")[1])) {
-                        StringBuilder message = new StringBuilder();
-                        if (msg.split(" ").length > 2) {
-                            for (int i = 2; i < msg.split(" ").length; i++) {
-                                message.append(msg.split(" ")[i])
-                                        .append(i != msg.split(" ").length - 1 ? " " : "\n");
-                            }
-                        }
-                        c.writeAndFlush("Private message from " + users.get(ctx.channel()).getLogin() + ": " + message.toString());
-                    }
-                }
-            } else if (msg.split(" ")[0].equals(Flags.MULTICAST_MSG)) {
-                for (Channel c : users.keySet()) {
-                        StringBuilder message = new StringBuilder();
-                        if (msg.split(" ").length > 0) {
-                            for (int i = 1; i < msg.split(" ").length; i++) {
-                                message.append(msg.split(" ")[i])
-                                        .append(i != msg.split(" ").length - 1 ? " " : "\n");
-                            }
-                        }
-                        c.writeAndFlush(users.get(ctx.channel()).getLogin() + " to all: " + message.toString());
-                }
-            }
+        if (!users.keySet().contains(ctx.channel())) {
+            authOrReg(ctx, msg);
         }
+            //Look for request List contacts
+        if (msg.startsWith(Flags.GET_CONTACTS)) {
+                sendContacts(ctx);
+        }
+
+        //Look for unicast/multicast flag in msg
+//        if (msg.split(" ")[0].equals(Flags.UNICAST_MSG)) {
+//            for (Channel c : users.keySet()) {
+//                if (users.get(c).getLogin().equals(msg.split(" ")[1])) {
+//                    StringBuilder message = new StringBuilder();
+//                    if (msg.split(" ").length > 2) {
+//                        for (int i = 2; i < msg.split(" ").length; i++) {
+//                            message.append(msg.split(" ")[i])
+//                                    .append(i != msg.split(" ").length - 1 ? " " : "\n");
+//                        }
+//                    }
+//                    c.writeAndFlush("Private message from " + users.get(ctx.channel()).getLogin() + ": " + message.toString());
+//                }
+//            }
+//        } else if (msg.split(" ")[0].equals(Flags.MULTICAST_MSG)) {
+//            for (Channel c : users.keySet()) {
+//                StringBuilder message = new StringBuilder();
+//                if (msg.split(" ").length > 0) {
+//                    for (int i = 1; i < msg.split(" ").length; i++) {
+//                        message.append(msg.split(" ")[i])
+//                                .append(i != msg.split(" ").length - 1 ? " " : "\n");
+//                    }
+//                }
+//                c.writeAndFlush(users.get(ctx.channel()).getLogin() + " to all: " + message.toString());
+//            }
+//        }
     }
 
     @Override

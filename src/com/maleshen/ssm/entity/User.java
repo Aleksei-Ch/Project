@@ -8,6 +8,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * The type User.
+ */
 public class User {
     private static final String SPLITTER = "<SPL>";
     private final Format DATETOSTR = new SimpleDateFormat("MMMM d, yyyy");
@@ -101,7 +104,6 @@ public class User {
         this.birthDate = birthDate;
     }
 
-
     @Override
     public String toString(){
 
@@ -118,12 +120,12 @@ public class User {
                 DATETOSTR.format(getBirthDate());
     }
 
-    /*  Parse user from string representation of entity
-    *   from upper method.
-    *   @param String representation of User
-    *       User.getFromString((new User()).toString) must equals new User();
-    *   @return null if input string not contains pattern
-    *           Parsed user if all ok.
+    /**
+     * Parse user from string representation of entity
+     *
+     * @param user the String representation of User
+     * @return null if input string not contains pattern
+     *         Parsed user if all ok.
      */
     public static User getFromString(String user){
 
@@ -149,9 +151,10 @@ public class User {
         return null;
     }
 
-    /*  Return string representation of user reg info
-    *   Like toString(), but with pass and without userID
-    *   FLAG.REGME
+    /**
+     * Get reg info string.
+     *
+     * @return the string
      */
     public String getRegInfo(){
 
@@ -168,12 +171,14 @@ public class User {
                 DATETOSTR.format(getBirthDate());
     }
 
-    /*  Parse user from string representation of regInfo
-    *   from upper method.
-    *   @param String representation of regInfo
-    *   @return null if input string not contains pattern
-    *           Parsed user if all ok.
-    */
+
+    /**  Parse user from string representation of regInfo
+     *   from upper method.
+     *
+     *   @param regInfo String representation of regInfo
+     *   @return null if input string not contains pattern
+     *           Parsed user if all ok.
+     */
     public static User getUserFromRegInfo(String regInfo){
 
         if (regInfo.split(SPLITTER).length == 6

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class ArrayListExt<User> extends ArrayList<User> {
 
-    static final String splitter = "**NEXT**";
+    static final String splitter = ">>>";
 
     /*  All of we need here -
     *   get string representation of contact list.
