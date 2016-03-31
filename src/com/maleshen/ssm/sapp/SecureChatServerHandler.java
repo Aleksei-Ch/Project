@@ -2,6 +2,7 @@ package com.maleshen.ssm.sapp;
 
 import com.maleshen.ssm.entity.ArrayListExt;
 import com.maleshen.ssm.entity.AuthInfo;
+import com.maleshen.ssm.entity.Message;
 import com.maleshen.ssm.entity.User;
 import com.maleshen.ssm.sapp.model.SSMAuthImpl;
 import com.maleshen.ssm.sapp.model.SSMDataBaseWorker;
@@ -25,9 +26,9 @@ import java.util.Map;
 public class SecureChatServerHandler extends SimpleChannelInboundHandler<String>{
 
     //All connections
-    static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    private static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
     //Authorized users
-    static final Map<Channel, User> users = new HashMap<>();
+    private static final Map<Channel, User> users = new HashMap<>();
 
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
@@ -65,8 +66,12 @@ public class SecureChatServerHandler extends SimpleChannelInboundHandler<String>
             if (userFromReq != null) {
                 try {
                     User newUser = SSMDataBaseWorker.registerUser(userFromReq);
-                    ctx.channel().writeAndFlush(newUser != null ?
-                            newUser.toString() + "\n" : Flags.REGFAULT + "\n");
+                    if (newUser != null) {
+                        users.put(ctx.channel(), newUser);
+                        ctx.channel().writeAndFlush(newUser.toString() + "\n");
+                    } else {
+                        ctx.writeAndFlush(Flags.REGFAULT + "\n");
+                    }
                 } catch (Exception e) {
                     ctx.channel().writeAndFlush(Flags.REGFAULT + "\n");
                 }
@@ -86,6 +91,30 @@ public class SecureChatServerHandler extends SimpleChannelInboundHandler<String>
         ctx.channel().writeAndFlush(contacts.toString() + "\n");
     }
 
+    private void redirectUnicastMsg(String msg) {
+        Message message = Message.getFromString(msg);
+        boolean later = true;
+
+        if (message.getToUser() != null) {
+            for (User u : users.values()) {
+                if (u.getLogin().equals(message.getToUser())) {
+                    later = false;
+                    for (Channel c : users.keySet()) {
+                        if (users.get(c).getLogin().equals(u.getLogin())) {
+                            message.setDelivered(true);
+                            c.writeAndFlush(message.toString() + "\n");
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            if (later){
+                //TODO. Put message to database and send after user login.
+            }
+        }
+    }
+
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
 
@@ -94,37 +123,15 @@ public class SecureChatServerHandler extends SimpleChannelInboundHandler<String>
         if (!users.keySet().contains(ctx.channel())) {
             authOrReg(ctx, msg);
         }
-            //Look for request List contacts
+
+        //Look for request List contacts
         if (msg.startsWith(Flags.GET_CONTACTS)) {
-                sendContacts(ctx);
+            sendContacts(ctx);
         }
 
-        //Look for unicast/multicast flag in msg
-//        if (msg.split(" ")[0].equals(Flags.UNICAST_MSG)) {
-//            for (Channel c : users.keySet()) {
-//                if (users.get(c).getLogin().equals(msg.split(" ")[1])) {
-//                    StringBuilder message = new StringBuilder();
-//                    if (msg.split(" ").length > 2) {
-//                        for (int i = 2; i < msg.split(" ").length; i++) {
-//                            message.append(msg.split(" ")[i])
-//                                    .append(i != msg.split(" ").length - 1 ? " " : "\n");
-//                        }
-//                    }
-//                    c.writeAndFlush("Private message from " + users.get(ctx.channel()).getLogin() + ": " + message.toString());
-//                }
-//            }
-//        } else if (msg.split(" ")[0].equals(Flags.MULTICAST_MSG)) {
-//            for (Channel c : users.keySet()) {
-//                StringBuilder message = new StringBuilder();
-//                if (msg.split(" ").length > 0) {
-//                    for (int i = 1; i < msg.split(" ").length; i++) {
-//                        message.append(msg.split(" ")[i])
-//                                .append(i != msg.split(" ").length - 1 ? " " : "\n");
-//                    }
-//                }
-//                c.writeAndFlush(users.get(ctx.channel()).getLogin() + " to all: " + message.toString());
-//            }
-//        }
+        if (msg.startsWith(Flags.UNICAST_MSG)) {
+            redirectUnicastMsg(msg);
+        }
     }
 
     @Override

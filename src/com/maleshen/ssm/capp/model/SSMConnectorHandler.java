@@ -1,7 +1,9 @@
 package com.maleshen.ssm.capp.model;
 
 import com.maleshen.ssm.capp.ClientApp;
+import com.maleshen.ssm.capp.view.MainSceneController;
 import com.maleshen.ssm.entity.ArrayListExt;
+import com.maleshen.ssm.entity.Message;
 import com.maleshen.ssm.entity.User;
 import com.maleshen.ssm.template.Flags;
 import io.netty.channel.ChannelHandlerContext;
@@ -38,6 +40,9 @@ class SSMConnectorHandler extends SimpleChannelInboundHandler<String> {
                 ClientApp.contactList = FXCollections.observableArrayList();
                 //Fill
                 ClientApp.contactList.addAll(ArrayListExt.getFromString(msg));
+            }
+            if (msg.startsWith(Flags.UNICAST_MSG)){
+                MainSceneController.getMessage(Message.getFromString(msg));
             }
         }
     }

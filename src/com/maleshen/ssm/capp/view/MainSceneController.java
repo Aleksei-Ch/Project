@@ -2,8 +2,11 @@ package com.maleshen.ssm.capp.view;
 
 import com.maleshen.ssm.capp.ClientApp;
 import com.maleshen.ssm.capp.model.SSMConnector;
+import com.maleshen.ssm.entity.Message;
 import com.maleshen.ssm.entity.User;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -13,6 +16,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainSceneController extends DefaultSceneController {
     @FXML
@@ -51,6 +58,17 @@ public class MainSceneController extends DefaultSceneController {
     private Button send;
     @FXML
     private ImageView contactAvatar;
+    @FXML
+    private TableView<Message> chatTable;
+    @FXML
+    private TableColumn<Message, String> author;
+    @FXML
+    private TableColumn<Message, String> message;
+    @FXML
+    private TableColumn<Message, String> msgTime;
+
+    //Dialogs
+    private static Map<String, ObservableList<Message>> dialogs = new HashMap();
 
     @Override
     @FXML
@@ -86,13 +104,50 @@ public class MainSceneController extends DefaultSceneController {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getClickCount() > 0) {
-                    openDialogPane(contacts.getSelectionModel().getSelectedItem());
+                    if (contacts.getSelectionModel().getSelectedItem() != null)
+                        openDialogPane(contacts.getSelectionModel().getSelectedItem());
                 }
             }
         });
 
         //Some logic of renew contact list or any else data.
         new Renewer();
+    }
+
+    private void fillChat(String contact){
+        chatTable.setItems(dialogs.get(contact));
+
+        author.setCellValueFactory(cellData -> new SimpleStringProperty(
+                cellData.getValue().getFromUser().getLogin().equals(ClientApp.currentUser.getLogin()) ?
+                "You: " : cellData.getValue().getFromUser().getLogin()));
+        message.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getMsg()));
+        msgTime.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTime()));
+    }
+
+    @FXML
+    private void sendMessage(){
+        if (contacts.getSelectionModel().getSelectedItem() != null &&
+                !msg.getText().equals("")){
+
+            Message m = new Message(ClientApp.currentUser,
+                    contacts.getSelectionModel().getSelectedItem().getLogin(),
+                    msg.getText(),
+                    (new SimpleDateFormat("HH:mm")).format(Calendar.getInstance().getTime()),
+                    false);
+
+            dialogs.get(contacts.getSelectionModel().getSelectedItem().getLogin()).add(m);
+            SSMConnector.sendMessage(m.toString());
+            msg.setText("");
+        }
+    }
+
+    public static void getMessage(Message message){
+        if (dialogs.keySet().contains(message.getFromUser().getLogin())){
+            dialogs.get(message.getFromUser().getLogin()).add(message);
+        } else {
+            dialogs.put(message.getFromUser().getLogin(), FXCollections.observableArrayList());
+            dialogs.get(message.getFromUser().getLogin()).add(message);
+        }
     }
 
     private void setButtonEffect(Button b){
@@ -124,7 +179,8 @@ public class MainSceneController extends DefaultSceneController {
         send.setGraphic(new ImageView(
                 new Image(String.valueOf(getClass().getResource("img/send.png")))));
         setButtonEffect(send);
-        //TODO. ChatTable
+        //Open ChatTable
+        fillChat(contacts.getSelectionModel().getSelectedItem().getLogin());
     }
 
     private class Renewer implements Runnable{
@@ -158,7 +214,17 @@ public class MainSceneController extends DefaultSceneController {
                 wait(2000);
 
                 //Push updated data
-                contacts.setItems(ClientApp.contactList);
+                if (ClientApp.contactList != null){
+                    int i = contacts.getSelectionModel().getSelectedIndex();
+                    contacts.setItems(ClientApp.contactList);
+                    contacts.getSelectionModel().select(i);
+                }
+                //Setting up dialogs
+                if (ClientApp.contactList != null)
+                    for (User user : ClientApp.contactList){
+                        if (!dialogs.containsKey(user.getLogin()))
+                            dialogs.put(user.getLogin(), FXCollections.observableArrayList());
+                    }
 
                 //Wait for a minute
                 wait(60000);

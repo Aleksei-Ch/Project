@@ -139,7 +139,6 @@ public class AuthRegSceneController extends DefaultSceneController {
                 switch (code){
                     //All is Ok
                     case 0:
-                        //Authenticated, open Main Window
                         openMain();
                         break;
                     //Not registered

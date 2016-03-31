@@ -3,7 +3,7 @@ package com.maleshen.ssm.sapp.model;
 import com.maleshen.ssm.entity.AuthInfo;
 import com.maleshen.ssm.entity.User;
 import com.maleshen.ssm.sapp.model.interfaces.SSMAuth;
-import com.maleshen.ssm.template.SsmCrypt;
+import com.maleshen.ssm.security.SsmCrypt;
 
 import java.sql.SQLException;
 

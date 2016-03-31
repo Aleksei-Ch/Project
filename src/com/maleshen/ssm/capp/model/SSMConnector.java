@@ -180,4 +180,8 @@ public class SSMConnector {
 
     }
 
+    public static void sendMessage(String message){
+        ch.writeAndFlush(message + "\n");
+    }
+
 }

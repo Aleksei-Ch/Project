@@ -1,4 +1,4 @@
-package com.maleshen.ssm.template;
+package com.maleshen.ssm.security;
 
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
@@ -11,7 +11,7 @@ public class SsmCrypt {
 
     //Getting MD5
     //It's just for identification message flags
-    static String getMD5(String s) {
+    public static String getMD5(String s) {
         MessageDigest messageDigest = null;
         byte[] digest = new byte[0];
 

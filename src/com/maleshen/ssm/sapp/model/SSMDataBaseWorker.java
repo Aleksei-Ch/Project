@@ -3,12 +3,11 @@ package com.maleshen.ssm.sapp.model;
 import com.maleshen.ssm.entity.ArrayListExt;
 import com.maleshen.ssm.entity.User;
 import com.maleshen.ssm.sapp.model.interfaces.SSMDataBaseConnector;
-import com.maleshen.ssm.template.SsmCrypt;
+import com.maleshen.ssm.security.SsmCrypt;
 import com.mysql.jdbc.PreparedStatement;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
 
 public class SSMDataBaseWorker {

@@ -12,9 +12,9 @@
 
 <AnchorPane maxHeight="500.0" maxWidth="700.0" minHeight="500.0" minWidth="700.0" prefHeight="500.0" prefWidth="700.0" snapToPixel="false" styleClass="background" stylesheets="@style/MainScene.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maleshen.ssm.capp.view.MainSceneController">
     <children>
-      <TableView fx:id="contacts" layoutY="73.0" prefHeight="400.0" prefWidth="200.0">
+      <TableView fx:id="contacts" layoutY="73.0" prefHeight="390.0" prefWidth="200.0">
         <columns>
-          <TableColumn fx:id="contactName" editable="false" maxWidth="200.0" minWidth="200.0" prefWidth="200.0" resizable="false" text="C1" />
+          <TableColumn fx:id="contactName" editable="false" maxWidth="190.0" minWidth="177.0" prefWidth="182.0" resizable="false" text="C1" />
         </columns>
       </TableView>
         <AnchorPane prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #DDDDDD;" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -41,7 +41,7 @@
                 </Label>
             </children>
         </AnchorPane>
-        <AnchorPane layoutY="470.0" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: #DDDDDD;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+        <AnchorPane layoutY="470.0" prefHeight="36.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
             <children>
                 <GridPane alignment="CENTER" layoutY="1.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: #FFF; -fx-border-color: #CCC;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                     <columnConstraints>
@@ -78,7 +78,7 @@
                 </GridPane>
             </children>
         </AnchorPane>
-        <AnchorPane layoutX="200.0" prefHeight="500.0" prefWidth="500.0" style="-fx-background-color: #FFF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <AnchorPane fx:id="welcomeMsg" layoutX="200.0" prefHeight="500.0" prefWidth="500.0" style="-fx-background-color: #FFF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <TextField alignment="CENTER" editable="false" focusTraversable="false" layoutX="57.0" layoutY="77.0" prefHeight="44.0" prefWidth="407.0" style="-fx-background-color: #FFF;" text="Welcome to Simple Safety Messenger." AnchorPane.leftAnchor="57.0" AnchorPane.rightAnchor="36.0">
                     <font>
@@ -112,13 +112,13 @@
                 </Label>
             </children>
         </AnchorPane>
-        <AnchorPane layoutX="200.0" minHeight="500.0" prefHeight="500.0" prefWidth="500.0" style="-fx-background-color: #FFF;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <AnchorPane fx:id="dialogPane" layoutX="200.0" minHeight="500.0" prefHeight="500.0" prefWidth="500.0" style="-fx-background-color: #FFF;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <TableView focusTraversable="false" layoutY="49.0" pickOnBounds="false" prefHeight="370.0" prefWidth="500.0" style="-fx-background-color: #FFF; -fx-border-color: #FFF;" AnchorPane.bottomAnchor="81.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="49.0">
+                <TableView fx:id="chatTable" focusTraversable="false" layoutY="49.0" pickOnBounds="false" prefHeight="370.0" prefWidth="500.0" AnchorPane.bottomAnchor="81.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="49.0">
                     <columns>
-                        <TableColumn editable="false" prefWidth="84.0" resizable="false" sortable="false" />
-                        <TableColumn editable="false" maxWidth="-1.0" minWidth="325.0" prefWidth="325.0" sortable="false" />
-                        <TableColumn editable="false" maxWidth="84.0" minWidth="84.0" prefWidth="84.0" resizable="false" sortable="false" />
+                        <TableColumn fx:id="author" editable="false" maxWidth="75.0" minWidth="75.0" prefWidth="75.0" resizable="false" sortable="false" />
+                        <TableColumn fx:id="message" editable="false" maxWidth="340.0" minWidth="320.0" prefWidth="340.0" sortable="false" />
+                        <TableColumn fx:id="msgTime" editable="false" maxWidth="80.0" minWidth="0.0" prefWidth="60.0" resizable="false" sortable="false" />
                     </columns>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -136,35 +136,31 @@
                         </Separator>
                         <Pane blendMode="SRC_ATOP" layoutX="422.0" layoutY="11.0" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: #000; -fx-background-radius: 100;" AnchorPane.rightAnchor="28.0">
                             <children>
-                                <ImageView blendMode="SRC_ATOP" depthTest="ENABLE" fitHeight="50.0" fitWidth="50.0" preserveRatio="true">
+                                <ImageView fx:id="contactAvatar" blendMode="SRC_ATOP" depthTest="ENABLE" fitHeight="50.0" fitWidth="50.0" preserveRatio="true">
                                     <image>
                                         <Image url="@noav.png" />
                                     </image>
                                 </ImageView>
                             </children>
                         </Pane>
-                        <Label alignment="TOP_RIGHT" layoutX="214.0" layoutY="14.0" prefHeight="20.0" prefWidth="200.0" text="Name Lastname" AnchorPane.leftAnchor="214.0" AnchorPane.rightAnchor="86.0">
+                        <Label fx:id="nameLastnameContact" alignment="TOP_RIGHT" layoutX="214.0" layoutY="14.0" prefHeight="20.0" prefWidth="200.0" text="Name Lastname" AnchorPane.leftAnchor="214.0" AnchorPane.rightAnchor="86.0">
                             <font>
                                 <Font name="Tahoma" size="14.0" />
                             </font>
                         </Label>
-                        <Label alignment="TOP_RIGHT" layoutX="314.0" layoutY="36.0" prefHeight="15.0" prefWidth="100.0" text="login" AnchorPane.leftAnchor="314.0" AnchorPane.rightAnchor="86.0">
+                        <Label fx:id="loginContact" alignment="TOP_RIGHT" layoutX="314.0" layoutY="36.0" prefHeight="15.0" prefWidth="100.0" text="login" AnchorPane.leftAnchor="314.0" AnchorPane.rightAnchor="86.0">
                             <font>
                                 <Font name="Tahoma Bold" size="14.0" />
                             </font>
                         </Label>
                     </children>
                 </AnchorPane>
-                <TextArea focusTraversable="false" layoutX="8.0" layoutY="426.0" pickOnBounds="false" prefHeight="60.0" prefWidth="420.0">
+                <TextArea fx:id="msg" focusTraversable="false" layoutX="8.0" layoutY="426.0" pickOnBounds="false" prefHeight="60.0" prefWidth="420.0">
                     <font>
                         <Font name="Tahoma" size="12.0" />
                     </font>
                 </TextArea>
-                <ImageView fitHeight="60.0" fitWidth="60.0" focusTraversable="true" layoutX="431.0" layoutY="429.0" pickOnBounds="true" preserveRatio="true">
-                    <image>
-                        <Image url="@send.png" />
-                    </image>
-                </ImageView>
+            <Button fx:id="send" layoutX="428.0" layoutY="426.0" mnemonicParsing="false" onAction="#sendMessage" prefHeight="60.0" prefWidth="62.0" />
             </children>
         </AnchorPane>
     </children>
