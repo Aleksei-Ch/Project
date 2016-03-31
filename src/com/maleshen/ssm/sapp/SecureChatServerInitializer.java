@@ -1,5 +1,6 @@
 package com.maleshen.ssm.sapp;
 
+import com.maleshen.ssm.sapp.model.SSMCleaner;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -35,5 +36,8 @@ public class SecureChatServerInitializer extends ChannelInitializer<SocketChanne
 
         // and then business logic.
         pipeline.addLast(new SecureChatServerHandler());
+
+        // and cleaner channels.
+        new SSMCleaner();
     }
 }

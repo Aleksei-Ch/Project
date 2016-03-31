@@ -168,7 +168,7 @@ public class AuthRegSceneController extends DefaultSceneController {
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
-                SSMConnector.group.shutdownGracefully();
+                SSMConnector.close();
                 System.exit(0);
             }
         });

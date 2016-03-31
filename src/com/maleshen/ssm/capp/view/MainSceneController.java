@@ -118,8 +118,8 @@ public class MainSceneController extends DefaultSceneController {
         chatTable.setItems(dialogs.get(contact));
 
         author.setCellValueFactory(cellData -> new SimpleStringProperty(
-                cellData.getValue().getFromUser().getLogin().equals(ClientApp.currentUser.getLogin()) ?
-                "You: " : cellData.getValue().getFromUser().getLogin()));
+                cellData.getValue().getFromUser().equals(ClientApp.currentUser.getLogin()) ?
+                "You: " : cellData.getValue().getFromUser()));
         message.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getMsg()));
         msgTime.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTime()));
     }
@@ -129,7 +129,7 @@ public class MainSceneController extends DefaultSceneController {
         if (contacts.getSelectionModel().getSelectedItem() != null &&
                 !msg.getText().equals("")){
 
-            Message m = new Message(ClientApp.currentUser,
+            Message m = new Message(ClientApp.currentUser.getLogin(),
                     contacts.getSelectionModel().getSelectedItem().getLogin(),
                     msg.getText(),
                     (new SimpleDateFormat("HH:mm")).format(Calendar.getInstance().getTime()),
@@ -142,11 +142,11 @@ public class MainSceneController extends DefaultSceneController {
     }
 
     public static void getMessage(Message message){
-        if (dialogs.keySet().contains(message.getFromUser().getLogin())){
-            dialogs.get(message.getFromUser().getLogin()).add(message);
+        if (dialogs.keySet().contains(message.getFromUser())){
+            dialogs.get(message.getFromUser()).add(message);
         } else {
-            dialogs.put(message.getFromUser().getLogin(), FXCollections.observableArrayList());
-            dialogs.get(message.getFromUser().getLogin()).add(message);
+            dialogs.put(message.getFromUser(), FXCollections.observableArrayList());
+            dialogs.get(message.getFromUser()).add(message);
         }
     }
 

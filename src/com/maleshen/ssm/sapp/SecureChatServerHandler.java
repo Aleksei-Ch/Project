@@ -17,6 +17,7 @@ import io.netty.handler.ssl.SslHandler;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import io.netty.util.concurrent.GlobalEventExecutor;
+import javafx.collections.ObservableList;
 
 import javax.jws.soap.SOAPBinding;
 import java.sql.SQLException;
@@ -26,9 +27,9 @@ import java.util.Map;
 public class SecureChatServerHandler extends SimpleChannelInboundHandler<String>{
 
     //All connections
-    private static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    public static final ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
     //Authorized users
-    private static final Map<Channel, User> users = new HashMap<>();
+    public static final Map<Channel, User> users = new HashMap<>();
 
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
@@ -53,6 +54,8 @@ public class SecureChatServerHandler extends SimpleChannelInboundHandler<String>
             if (user != null) {
                 users.put(ctx.channel(), user);
                 ctx.channel().writeAndFlush(user.toString() + "\n");
+                //Look for not delivered msgs
+                deliverLost(ctx, user.getLogin());
             } else {
                 ctx.channel().writeAndFlush(Flags.AUTH_BAD + "\n");
             }
@@ -91,18 +94,22 @@ public class SecureChatServerHandler extends SimpleChannelInboundHandler<String>
         ctx.channel().writeAndFlush(contacts.toString() + "\n");
     }
 
-    private void redirectUnicastMsg(String msg) {
+    private void redirectUnicastMsg(String msg) throws SQLException, ClassNotFoundException {
         Message message = Message.getFromString(msg);
         boolean later = true;
 
         if (message.getToUser() != null) {
             for (User u : users.values()) {
                 if (u.getLogin().equals(message.getToUser())) {
-                    later = false;
                     for (Channel c : users.keySet()) {
                         if (users.get(c).getLogin().equals(u.getLogin())) {
+                            if (!c.isActive()){
+                                users.remove(c);
+                                break;
+                            }
                             message.setDelivered(true);
                             c.writeAndFlush(message.toString() + "\n");
+                            later = false;
                             break;
                         }
                     }
@@ -110,7 +117,17 @@ public class SecureChatServerHandler extends SimpleChannelInboundHandler<String>
                 }
             }
             if (later){
-                //TODO. Put message to database and send after user login.
+                SSMDataBaseWorker.putMessage(message);
+            }
+        }
+    }
+
+    private void deliverLost(ChannelHandlerContext ctx, String login) throws SQLException, ClassNotFoundException {
+        ObservableList<Message> messages = SSMDataBaseWorker.getMessagesForUser(login);
+
+        if (messages.size() > 0){
+            for (Message m : messages){
+                ctx.channel().writeAndFlush(m.toString() + "\n");
             }
         }
     }

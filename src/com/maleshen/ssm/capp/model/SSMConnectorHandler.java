@@ -32,7 +32,7 @@ class SSMConnectorHandler extends SimpleChannelInboundHandler<String> {
                 ClientApp.currentUser = User.getFromString(msg);
             }
         }
-        //TODO. Chat.
+        // Chat logic.
         else {
             //First time we need to get contact list. So look for them
             if (msg.startsWith(Flags.GET_CONTACTS)){

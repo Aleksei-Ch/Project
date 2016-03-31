@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 public class Message {
     private final String msg;
-    private final User fromUser;
+    private final String fromUser;
     private final String toUser;
     private boolean delivered;
     private int id = 0;
@@ -19,7 +19,7 @@ public class Message {
 
     private static final String splitter = "<<SPL<<";
 
-    public Message(User fromUser, String toUser, String msg, String time, boolean delivered) {
+    public Message(String fromUser, String toUser, String msg, String time, boolean delivered) {
         this.msg = msg;
         this.fromUser = fromUser;
         this.toUser = toUser;
@@ -60,7 +60,7 @@ public class Message {
      *
      * @return Value of fromUser.
      */
-    public User getFromUser() {
+    public String getFromUser() {
         return fromUser;
     }
 
@@ -81,7 +81,7 @@ public class Message {
                 splitter +
                 getTime() +
                 splitter +
-                getFromUser().toString() +
+                getFromUser() +
                 splitter +
                 getToUser() +
                 splitter +
@@ -94,7 +94,7 @@ public class Message {
         if (parser.length >= 5 &&
                 parser[0].equals(Flags.UNICAST_MSG)){
             String time = parser[1];
-            User fromUser = User.getFromString(parser[2]);
+            String fromUser = parser[2];
             String toUser = parser[3];
             String message = "";
             if (parser.length > 5){

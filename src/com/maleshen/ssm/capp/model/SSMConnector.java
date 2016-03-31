@@ -24,7 +24,7 @@ public class SSMConnector {
     static int PORT = 0;
     private static Channel ch;
     private static Bootstrap b;
-    public static EventLoopGroup group;
+    private static EventLoopGroup group;
 
     public SSMConnector() throws SSLException { }
 
@@ -32,6 +32,11 @@ public class SSMConnector {
         ch = null;
         b = new Bootstrap();
         group = new NioEventLoopGroup();
+    }
+
+    public static void close(){
+        group.shutdownGracefully();
+        ch.disconnect();
     }
 
     private static boolean authenticate(AuthInfo authInfo, Channel ch) throws InterruptedException {
