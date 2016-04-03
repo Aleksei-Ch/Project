@@ -9,17 +9,25 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.maleshen.ssm.capp.ClientApp.primaryStage;
 
 public class MainSceneController extends DefaultSceneController {
     @FXML
@@ -27,7 +35,7 @@ public class MainSceneController extends DefaultSceneController {
     @FXML
     private Button add;
     @FXML
-    private Button history;
+    private Button info;
     @FXML
     private Button settings;
     @FXML
@@ -68,7 +76,11 @@ public class MainSceneController extends DefaultSceneController {
     private TableColumn<Message, String> msgTime;
 
     //Dialogs
-    private static Map<String, ObservableList<Message>> dialogs = new HashMap();
+    static Map<String, ObservableList<Message>> dialogs = new HashMap();
+    //Find contacts scene
+    private Stage findAddContactsStage = new Stage();
+    static boolean findIsOpen = false;
+
 
     @Override
     @FXML
@@ -78,15 +90,18 @@ public class MainSceneController extends DefaultSceneController {
         add.setGraphic(new ImageView(
                 new Image(String.valueOf(getClass().getResource("img/add.png")))));
         setButtonEffect(add);
-        history.setGraphic(new ImageView(
-                new Image(String.valueOf(getClass().getResource("img/history.png")))));
-        setButtonEffect(history);
+        info.setGraphic(new ImageView(
+                new Image(String.valueOf(getClass().getResource("img/info.png")))));
+        setButtonEffect(info);
         settings.setGraphic(new ImageView(
                 new Image(String.valueOf(getClass().getResource("img/settings.png")))));
         setButtonEffect(settings);
         exit.setGraphic(new ImageView(
                 new Image(String.valueOf(getClass().getResource("img/exit.png")))));
         setButtonEffect(exit);
+        send.setGraphic(new ImageView(
+                new Image(String.valueOf(getClass().getResource("img/send.png")))));
+        setButtonEffect(send);
 
         //Fill user info
         name.setText(ClientApp.currentUser.getName());
@@ -111,9 +126,14 @@ public class MainSceneController extends DefaultSceneController {
         });
 
         //Some logic of renew contact list or any else data.
-        new Renewer();
+        new Renew();
     }
 
+    /** This method must fill chat table
+     *  for current selected contact
+     *
+     * @param contact login of selected contact
+     */
     private void fillChat(String contact){
         chatTable.setItems(dialogs.get(contact));
 
@@ -168,26 +188,68 @@ public class MainSceneController extends DefaultSceneController {
     }
 
     private void openDialogPane(User contact){
-        welcomeMsg.setVisible(false);
-        dialogPane.setVisible(true);
-        //init
-        nameLastnameContact.setText(contact.getName()+" "+contact.getLastName());
-        loginContact.setText(contact.getLogin());
-        //TODO. Avatars
-        contactAvatar.setImage(new Image(String.valueOf(getClass().getResource("img/noav.png"))));
-        //Send button
-        send.setGraphic(new ImageView(
-                new Image(String.valueOf(getClass().getResource("img/send.png")))));
-        setButtonEffect(send);
-        //Open ChatTable
-        fillChat(contacts.getSelectionModel().getSelectedItem().getLogin());
+        if (contact != null) {
+            welcomeMsg.setVisible(false);
+            dialogPane.setVisible(true);
+            //init
+            nameLastnameContact.setText(contact.getName() + " " + contact.getLastName());
+            loginContact.setText(contact.getLogin());
+            //TODO. Avatars
+            contactAvatar.setImage(new Image(String.valueOf(getClass().getResource("img/noav.png"))));
+
+            //Open ChatTable
+            fillChat(contacts.getSelectionModel().getSelectedItem().getLogin());
+        }
     }
 
-    private class Renewer implements Runnable{
+    @FXML
+    private void findAddContact() throws IOException {
+        if (!findAddContactsStage.isShowing()) {
+            findIsOpen = true;
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(ClientApp.class.getResource("view/FindContactsScene.fxml"));
+
+            Parent parent = loader.load();
+
+            findAddContactsStage.setScene(new Scene(parent));
+            findAddContactsStage.setAlwaysOnTop(true);
+            findAddContactsStage.setResizable(false);
+            findAddContactsStage.show();
+            findAddContactsStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    findAddContactsStage.close();
+                    findIsOpen = false;
+                }
+            });
+        }
+    }
+
+    @FXML
+    private void logout() throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(ClientApp.class.getResource("view/AuthRegScene.fxml"));
+        Parent parent = loader.load();
+
+        SSMConnector.authenticated = false;
+        SSMConnector.close();
+        ClientApp.currentUser = null;
+        dialogs = new HashMap<>();
+
+
+        primaryStage.setScene(new Scene(parent));
+        primaryStage.show();
+    }
+
+    /** Inner class for daemon thread
+     *  needed for autorenew some data
+     *  every time.
+     */
+    private class Renew implements Runnable{
 
         private Thread thread;
 
-        Renewer(){
+        Renew(){
             thread = new Thread(this);
             thread.setDaemon(true);
             thread.start();
@@ -231,5 +293,4 @@ public class MainSceneController extends DefaultSceneController {
             }
         }
     }
-
 }

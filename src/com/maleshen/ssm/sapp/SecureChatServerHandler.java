@@ -132,6 +132,33 @@ public class SecureChatServerHandler extends SimpleChannelInboundHandler<String>
         }
     }
 
+    private void foundAndAnswer(ChannelHandlerContext ctx, String message) throws SQLException, ClassNotFoundException {
+        if (ctx.channel().isActive()){
+            StringBuilder keywords = new StringBuilder();
+            keywords.append(message.split(Flags.FOUND_SPLITTER)[1]);
+            if (message.split(Flags.FOUND_SPLITTER).length > 2){
+                for (int i = 2; i < message.split(Flags.FOUND_SPLITTER).length; i++){
+                    keywords.append(message.split(Flags.FOUND_SPLITTER)[i]);
+                }
+            }
+            ctx.channel().writeAndFlush(Flags.FOUND_REQ +
+                    Flags.FOUND_SPLITTER +
+                    SSMDataBaseWorker.foundUsersByKeyword(keywords.toString()).toString() + "\n");
+        }
+    }
+
+    private void setContacts(String msg){
+        try {
+            msg = msg.split(Flags.SETTER_SPLITTER)[1];
+            int firstID = Integer.parseInt(msg.split(Flags.USER_SPLITTER)[0]);
+            int secondID = Integer.parseInt(msg.split(Flags.USER_SPLITTER)[1]);
+            SSMDataBaseWorker.setContacts(firstID, secondID);
+            SSMDataBaseWorker.setContacts(secondID, firstID);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
 
@@ -148,6 +175,14 @@ public class SecureChatServerHandler extends SimpleChannelInboundHandler<String>
 
         if (msg.startsWith(Flags.UNICAST_MSG)) {
             redirectUnicastMsg(msg);
+        }
+
+        if (msg.startsWith(Flags.FOUND_REQ)){
+            foundAndAnswer(ctx, msg);
+        }
+
+        if (msg.startsWith(Flags.SET_CONTACTS)){
+            setContacts(msg);
         }
     }
 

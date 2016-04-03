@@ -17,8 +17,6 @@ public class Message {
     private final Pattern timePatt = Pattern.compile(regexp);
     private Matcher matcher;
 
-    private static final String splitter = "<<SPL<<";
-
     public Message(String fromUser, String toUser, String msg, String time, boolean delivered) {
         this.msg = msg;
         this.fromUser = fromUser;
@@ -78,18 +76,18 @@ public class Message {
     @Override
     public String toString(){
         return Flags.UNICAST_MSG +
-                splitter +
+                Flags.MESSAGE_SPLITTER +
                 getTime() +
-                splitter +
+                Flags.MESSAGE_SPLITTER +
                 getFromUser() +
-                splitter +
+                Flags.MESSAGE_SPLITTER +
                 getToUser() +
-                splitter +
+                Flags.MESSAGE_SPLITTER +
                 getMsg();
     }
 
     public static Message getFromString(String msg){
-        String[] parser = msg.split(splitter);
+        String[] parser = msg.split(Flags.MESSAGE_SPLITTER);
 
         if (parser.length >= 5 &&
                 parser[0].equals(Flags.UNICAST_MSG)){
@@ -101,7 +99,7 @@ public class Message {
                 for (int i = 4; i < parser.length; i++){
                     message = parser[i];
                     if (i != parser.length - 1){
-                        message = message + splitter;
+                        message = message + Flags.MESSAGE_SPLITTER;
                     }
                 }
             } else {

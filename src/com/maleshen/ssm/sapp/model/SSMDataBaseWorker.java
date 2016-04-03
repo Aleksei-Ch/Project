@@ -67,13 +67,7 @@ public class SSMDataBaseWorker {
         ArrayListExt<User> contacts = new ArrayListExt<>();
 
         while (resultSet.next()){
-            Integer id = resultSet.getInt("id");
-            String login = resultSet.getString("login");
-            String name = resultSet.getString("name") != null ? resultSet.getString("name") : "Noname";
-            String lastName = resultSet.getString("lastname") != null ? resultSet.getString("lastname") : "Nolastname";
-            Date birthdate = resultSet.getDate("birthdate") != null ? resultSet.getDate("birthdate") : new Date();
-
-            contacts.add(new User(id, login, name, lastName, birthdate));
+            contacts.add(getUserFromResultSet(resultSet));
         }
 
         return contacts;
@@ -138,5 +132,45 @@ public class SSMDataBaseWorker {
         preparedStatement.execute();
 
         return getUserByLogin(user.getLogin());
+    }
+
+    public static ArrayListExt<User> foundUsersByKeyword(String keywords) throws ClassNotFoundException, SQLException {
+        ArrayListExt<User> resuilts = new ArrayListExt<>();
+
+        for (String keyword : keywords.split(" ")) {
+            keyword = "%"+keyword+"%";
+            PreparedStatement preparedStatement = (PreparedStatement) ssmDataBaseConnector.getConnection()
+                    .prepareStatement(SQLQueries.FOUND_USERS);
+            preparedStatement.setString(1, keyword);
+            preparedStatement.setString(2, keyword);
+            preparedStatement.setString(3, keyword);
+
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                resuilts.add(getUserFromResultSet(resultSet));
+            }
+        }
+
+        return resuilts;
+    }
+
+    private static User getUserFromResultSet(ResultSet resultSet) throws SQLException {
+        Integer id = resultSet.getInt("id");
+        String login = resultSet.getString("login");
+        String name = resultSet.getString("name") != null ? resultSet.getString("name") : "Noname";
+        String lastName = resultSet.getString("lastname") != null ? resultSet.getString("lastname") : "Nolastname";
+        Date birthdate = resultSet.getDate("birthdate") != null ? resultSet.getDate("birthdate") : new Date();
+
+        return new User(id, login, name, lastName, birthdate);
+    }
+
+    public static void setContacts(int firstID, int secondID) throws ClassNotFoundException, SQLException {
+        PreparedStatement preparedStatement = (PreparedStatement) ssmDataBaseConnector.getConnection()
+                .prepareStatement(SQLQueries.SET_CONTACTS);
+        preparedStatement.setInt(1, firstID);
+        preparedStatement.setInt(2, secondID);
+
+        preparedStatement.execute();
     }
 }

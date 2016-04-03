@@ -1,5 +1,6 @@
 package com.maleshen.ssm.capp.model;
 
+import com.maleshen.ssm.capp.ClientApp;
 import com.maleshen.ssm.entity.AuthInfo;
 import com.maleshen.ssm.entity.User;
 import com.maleshen.ssm.template.Flags;
@@ -19,6 +20,7 @@ public class SSMConnector {
     public static Boolean authenticated = false;
     static Boolean registered = false;
     static Boolean answered = false;
+    static Boolean searchCompleted = false;
 
     static String HOST = "";
     static int PORT = 0;
@@ -187,6 +189,38 @@ public class SSMConnector {
 
     public static void sendMessage(String message){
         ch.writeAndFlush(message + "\n");
+    }
+
+    /** This method formed and write message for server
+     *  with keywords for search and receiver login
+     *  and wait for server answer
+     * @param keywords keywords for search in database
+     */
+    public static void sendFoundRequest(String keywords) throws InterruptedException {
+        searchCompleted = false;
+
+        ch.writeAndFlush(Flags.FOUND_REQ +
+                Flags.FOUND_SPLITTER +
+//                ClientApp.currentUser.getLogin() +
+//                Flags.FOUND_SPLITTER +
+                keywords + "\n");
+
+        //Waiting for answer.
+        do {
+            if (!searchCompleted) {
+                TimeUnit.SECONDS.sleep(1);
+            }
+        } while (!searchCompleted);
+    }
+
+    /**
+     *
+     * @param info : string contains ID both users
+     *             pattern: "ID_CURRENT_USER"+USER_SPLITTER+"ID_REMOTE_USER"
+     *             without ""
+     */
+    public static void sendContactsReq(String info){
+        ch.writeAndFlush(Flags.SET_CONTACTS + Flags.SETTER_SPLITTER + info + "\n");
     }
 
 }

@@ -1,6 +1,7 @@
 package com.maleshen.ssm.capp.model;
 
 import com.maleshen.ssm.capp.ClientApp;
+import com.maleshen.ssm.capp.view.FindAddContactsController;
 import com.maleshen.ssm.capp.view.MainSceneController;
 import com.maleshen.ssm.entity.ArrayListExt;
 import com.maleshen.ssm.entity.Message;
@@ -40,9 +41,16 @@ class SSMConnectorHandler extends SimpleChannelInboundHandler<String> {
                 ClientApp.contactList = FXCollections.observableArrayList();
                 //Fill
                 ClientApp.contactList.addAll(ArrayListExt.getFromString(msg));
-            }
-            if (msg.startsWith(Flags.UNICAST_MSG)){
+            } else if (msg.startsWith(Flags.UNICAST_MSG)){
                 MainSceneController.getMessage(Message.getFromString(msg));
+            } else
+            // Look for message with search users results
+            if (msg.startsWith(Flags.FOUND_REQ)){
+                SSMConnector.searchCompleted = true;
+                if (msg.split(Flags.FOUND_SPLITTER).length > 1){
+                    FindAddContactsController.getResult(
+                            ArrayListExt.getFromString(msg.split(Flags.FOUND_SPLITTER)[1]));
+                }
             }
         }
     }

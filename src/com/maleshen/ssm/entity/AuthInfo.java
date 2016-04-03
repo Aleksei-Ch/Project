@@ -2,9 +2,7 @@ package com.maleshen.ssm.entity;
 
 import com.maleshen.ssm.template.Flags;
 
-import java.io.Serializable;
-
-public class AuthInfo implements Serializable {
+public class AuthInfo {
     private String login = "";
     private String pass = "";
 
@@ -33,17 +31,19 @@ public class AuthInfo implements Serializable {
 
     @Override
     public String toString(){
-        return Flags.AUTH_REQ + " "
-                + login + " "
-                + pass;
+        return Flags.AUTH_REQ +
+                Flags.AUTHINFO_SPLITTER +
+                getLogin() +
+                Flags.AUTHINFO_SPLITTER +
+                getPass();
     }
 
     public static AuthInfo getFromString(String authInfo){
-        if (authInfo.split(" ").length == 3 &&
-                authInfo.split(" ")[0].equals(Flags.AUTH_REQ)){
+        if (authInfo.split(Flags.AUTHINFO_SPLITTER).length == 3 &&
+                authInfo.split(Flags.AUTHINFO_SPLITTER)[0].equals(Flags.AUTH_REQ)){
             return new AuthInfo(
-                    authInfo.split(" ")[1],
-                    authInfo.split(" ")[2]
+                    authInfo.split(Flags.AUTHINFO_SPLITTER)[1],
+                    authInfo.split(Flags.AUTHINFO_SPLITTER)[2]
             );
         }
         return null;

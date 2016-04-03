@@ -6,9 +6,7 @@ import java.util.ArrayList;
 
 public class ArrayListExt<User> extends ArrayList<User> {
 
-    static final String splitter = ">>>";
-
-    /*  All of we need here -
+    /**  All of we need here -
     *   get string representation of contact list.
     *   It's a holly shit, but work fun.
      */
@@ -20,7 +18,7 @@ public class ArrayListExt<User> extends ArrayList<User> {
         result.append(Flags.GET_CONTACTS);
 
         for(User u : this){
-            result.append(splitter)
+            result.append(Flags.ARRAYLISTEXT_SPLITTER)
                     .append(u.toString());
         }
 
@@ -31,7 +29,7 @@ public class ArrayListExt<User> extends ArrayList<User> {
 
         ArrayListExt<com.maleshen.ssm.entity.User> contacts = new ArrayListExt<>();
 
-        String[] tmp = s.split(splitter);
+        String[] tmp = s.split(Flags.ARRAYLISTEXT_SPLITTER);
 
         if (tmp[0].equals(Flags.GET_CONTACTS) && tmp.length > 1){
             for (int i = 1; i < tmp.length; i++) {

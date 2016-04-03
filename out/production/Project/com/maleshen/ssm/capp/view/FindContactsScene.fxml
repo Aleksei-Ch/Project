@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" stylesheets="@style/FindContactsScene.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maleshen.ssm.capp.view.FindAddContactsController">
+   <children>
+      <Button layoutX="504.0" layoutY="83.0" mnemonicParsing="false" onAction="#search" prefHeight="25.0" prefWidth="83.0" text="Search" />
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="23.0" layoutY="25.0" prefHeight="29.0" prefWidth="548.0" styleClass="labelFound" text="Put keywords for search contacts:" />
+      <TableView fx:id="results" layoutX="16.0" layoutY="124.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="260.0" prefWidth="570.0" styleClass="Table">
+        <columns>
+          <TableColumn fx:id="login" editable="false" prefWidth="145.0" text="Login" />
+          <TableColumn fx:id="name" prefWidth="208.0" text="Name" />
+            <TableColumn fx:id="lastName" prefWidth="196.0" text="Lastname" />
+        </columns>
+      </TableView>
+      <Label fx:id="notFound" alignment="CENTER" layoutX="81.0" layoutY="208.0" prefHeight="15.0" prefWidth="436.0" text="No matches founded." visible="false" />
+      <Label fx:id="success" alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="52.0" prefHeight="29.0" prefWidth="548.0" text="Success ! During a minute a user will be shown in your contact list" visible="false">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Label>
+      <TextField fx:id="keywords" layoutX="14.0" layoutY="83.0" onAction="#search" prefHeight="25.0" prefWidth="491.0" />
+   </children>
+</AnchorPane>

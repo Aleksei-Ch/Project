@@ -12,4 +12,7 @@ class SQLQueries {
     static final String GET_MESSAGES_FOR_USER = "SELECT * FROM messages_queue " +
                                                 "WHERE toUser = ?";
     static final String DELETE_DELIVERED_MSGS = "DELETE FROM messages_queue WHERE toUser = ?";
+    static final String FOUND_USERS = "SELECT * FROM users WHERE login LIKE ? OR name LIKE ? OR lastname LIKE ?";
+    static final String SET_CONTACTS = "INSERT INTO contacts(id_user, id_contact) " +
+                                        "VALUES (?, ?)";
 }

@@ -12,7 +12,6 @@ import java.util.Date;
  * The type User.
  */
 public class User {
-    private static final String SPLITTER = "<SPL>";
     private final Format DATETOSTR = new SimpleDateFormat("MMMM d, yyyy");
     private static final DateFormat DATEFROMSTR = new SimpleDateFormat("MMMM d, yyyy");
 
@@ -108,15 +107,15 @@ public class User {
     public String toString(){
 
         return Flags.USER +
-                SPLITTER +
+                Flags.USER_SPLITTER +
                 getId() +
-                SPLITTER +
+                Flags.USER_SPLITTER +
                 getLogin() +
-                SPLITTER +
+                Flags.USER_SPLITTER +
                 getName() +
-                SPLITTER +
+                Flags.USER_SPLITTER +
                 getLastName() +
-                SPLITTER +
+                Flags.USER_SPLITTER +
                 DATETOSTR.format(getBirthDate());
     }
 
@@ -129,23 +128,23 @@ public class User {
      */
     public static User getFromString(String user){
 
-        if (user.split(SPLITTER).length == 6
-                && user.split(SPLITTER)[0].equals(Flags.USER)){
+        if (user.split(Flags.USER_SPLITTER).length == 6
+                && user.split(Flags.USER_SPLITTER)[0].equals(Flags.USER)){
 
             //Try parse birthDate
             //Format: "January 2, 2010"
             Date birthdate;
 
             try {
-                birthdate = DATEFROMSTR.parse(user.split(SPLITTER)[5]);
+                birthdate = DATEFROMSTR.parse(user.split(Flags.USER_SPLITTER)[5]);
             } catch (ParseException e) {
                 birthdate = new Date();
             }
 
-            return new User(Integer.parseInt(user.split(SPLITTER)[1]), //id
-                    user.split(SPLITTER)[2],         //login
-                    user.split(SPLITTER)[3],         //name
-                    user.split(SPLITTER)[4],         //lastName
+            return new User(Integer.parseInt(user.split(Flags.USER_SPLITTER)[1]), //id
+                    user.split(Flags.USER_SPLITTER)[2],         //login
+                    user.split(Flags.USER_SPLITTER)[3],         //name
+                    user.split(Flags.USER_SPLITTER)[4],         //lastName
                     birthdate);                      //birthDate
         }
         return null;
@@ -159,15 +158,15 @@ public class User {
     public String getRegInfo(){
 
         return Flags.REGME +
-                SPLITTER +
+                Flags.USER_SPLITTER +
                 getLogin() +
-                SPLITTER +
+                Flags.USER_SPLITTER +
                 getPass() +
-                SPLITTER +
+                Flags.USER_SPLITTER +
                 getName() +
-                SPLITTER +
+                Flags.USER_SPLITTER +
                 getLastName() +
-                SPLITTER +
+                Flags.USER_SPLITTER +
                 DATETOSTR.format(getBirthDate());
     }
 
@@ -181,23 +180,23 @@ public class User {
      */
     public static User getUserFromRegInfo(String regInfo){
 
-        if (regInfo.split(SPLITTER).length == 6
-                && regInfo.split(SPLITTER)[0].equals(Flags.REGME)){
+        if (regInfo.split(Flags.USER_SPLITTER).length == 6
+                && regInfo.split(Flags.USER_SPLITTER)[0].equals(Flags.REGME)){
 
             //Try parse birthDate
             //Format: "January 2, 2010"
             Date birthdate;
 
             try {
-                birthdate = DATEFROMSTR.parse(regInfo.split(SPLITTER)[5]);
+                birthdate = DATEFROMSTR.parse(regInfo.split(Flags.USER_SPLITTER)[5]);
             } catch (ParseException e) {
                 birthdate = new Date();
             }
 
-            return new User(regInfo.split(SPLITTER)[1], //login
-                    regInfo.split(SPLITTER)[2],         //pass
-                    regInfo.split(SPLITTER)[3],         //name
-                    regInfo.split(SPLITTER)[4],         //lastName
+            return new User(regInfo.split(Flags.USER_SPLITTER)[1], //login
+                    regInfo.split(Flags.USER_SPLITTER)[2],         //pass
+                    regInfo.split(Flags.USER_SPLITTER)[3],         //name
+                    regInfo.split(Flags.USER_SPLITTER)[4],         //lastName
                     birthdate);                      //birthDate
         }
         return null;

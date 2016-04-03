@@ -54,17 +54,17 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                  <Button fx:id="add" alignment="CENTER" mnemonicParsing="false" onAction="#initialize" styleClass="menuButton" textAlignment="CENTER">
+                  <Button fx:id="add" alignment="CENTER" mnemonicParsing="false" onAction="#findAddContact" styleClass="menuButton" textAlignment="CENTER">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>
                   </Button>
-                  <Button fx:id="history" mnemonicParsing="false" styleClass="menuButton" GridPane.columnIndex="1">
+                  <Button fx:id="info" mnemonicParsing="false" styleClass="menuButton" GridPane.columnIndex="1">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>
                   </Button>
-                  <Button fx:id="exit" mnemonicParsing="false" styleClass="menuButton" GridPane.columnIndex="3">
+                  <Button fx:id="exit" mnemonicParsing="false" onAction="#logout" styleClass="menuButton" GridPane.columnIndex="3">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>
