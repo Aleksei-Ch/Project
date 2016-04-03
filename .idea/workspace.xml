@@ -35,59 +35,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="MainSceneController.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/com/maleshen/ssm/capp/view/MainSceneController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="266">
-              <caret line="234" column="29" selection-start-line="234" selection-start-column="29" selection-end-line="234" selection-end-column="29" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="method#fillChat#0;class#MainSceneController#0" expanded="false" />
-                <element signature="method#sendMessage#0;class#MainSceneController#0" expanded="false" />
-                <element signature="method#getMessage#0;class#MainSceneController#0" expanded="false" />
-                <element signature="method#setButtonEffect#0;class#MainSceneController#0" expanded="false" />
-                <element signature="method#openDialogPane#0;class#MainSceneController#0" expanded="false" />
-                <element signature="method#findAddContact#0;class#MainSceneController#0" expanded="false" />
-                <element signature="class#Renew#0;class#MainSceneController#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AuthRegSceneController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/maleshen/ssm/capp/view/AuthRegSceneController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="230">
-              <caret line="166" column="28" selection-start-line="161" selection-start-column="8" selection-end-line="166" selection-end-column="28" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SSMConnector.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/maleshen/ssm/capp/model/SSMConnector.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1418">
-              <caret line="216" column="6" selection-start-line="216" selection-start-column="6" selection-end-line="216" selection-end-column="6" />
-              <folding>
-                <element signature="method#init#0;class#SSMConnector#0" expanded="false" />
-                <element signature="method#close#0;class#SSMConnector#0" expanded="false" />
-                <element signature="method#registrate#0;class#SSMConnector#0" expanded="false" />
-                <element signature="method#establishingConnection#0;class#SSMConnector#0" expanded="false" />
-                <element signature="e#3059#3084#0" expanded="false" />
-                <element signature="method#establishingConnection#1;class#SSMConnector#0" expanded="false" />
-                <element signature="method#renewData#0;class#SSMConnector#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SSMConnectorHandler.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="SSMConnectorHandler.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/maleshen/ssm/capp/model/SSMConnectorHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="414">
-              <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="972">
+              <caret line="54" column="13" selection-start-line="54" selection-start-column="13" selection-end-line="54" selection-end-column="13" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -213,10 +168,10 @@
         <option value="$PROJECT_DIR$/src/com/maleshen/ssm/template/Flags.java" />
         <option value="$PROJECT_DIR$/src/com/maleshen/ssm/sapp/model/SSMDataBaseWorker.java" />
         <option value="$PROJECT_DIR$/src/com/maleshen/ssm/sapp/model/SQLQueries.java" />
-        <option value="$PROJECT_DIR$/src/com/maleshen/ssm/capp/model/SSMConnectorHandler.java" />
         <option value="$PROJECT_DIR$/src/com/maleshen/ssm/sapp/SecureChatServerHandler.java" />
-        <option value="$PROJECT_DIR$/src/com/maleshen/ssm/capp/view/FindAddContactsController.java" />
         <option value="$PROJECT_DIR$/src/com/maleshen/ssm/capp/view/MainSceneController.java" />
+        <option value="$PROJECT_DIR$/src/com/maleshen/ssm/capp/view/FindAddContactsController.java" />
+        <option value="$PROJECT_DIR$/src/com/maleshen/ssm/capp/model/SSMConnectorHandler.java" />
       </list>
     </option>
   </component>
@@ -1041,12 +996,12 @@
       <workItem from="1459276127870" duration="9945000" />
       <workItem from="1459360847463" duration="15466000" />
       <workItem from="1459445851975" duration="9565000" />
-      <workItem from="1459524147857" duration="29224000" />
+      <workItem from="1459524147857" duration="29925000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="171588000" />
+    <option name="totallyTimeSpent" value="172289000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1102,50 +1057,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/maleshen/ssm/capp/model/SSMConnectorHandler.java</url>
-          <line>38</line>
-          <properties />
-          <option name="timeStamp" value="398" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/maleshen/ssm/capp/model/SSMConnectorHandler.java</url>
-          <line>36</line>
-          <properties />
-          <option name="timeStamp" value="399" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/maleshen/ssm/capp/model/SSMConnectorHandler.java</url>
-          <line>42</line>
-          <properties />
-          <option name="timeStamp" value="400" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/maleshen/ssm/capp/model/SSMConnectorHandler.java</url>
-          <line>43</line>
-          <properties />
-          <option name="timeStamp" value="401" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/maleshen/ssm/capp/model/SSMConnectorHandler.java</url>
-          <line>44</line>
-          <properties />
-          <option name="timeStamp" value="402" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/maleshen/ssm/capp/model/SSMConnectorHandler.java</url>
-          <line>18</line>
-          <properties />
-          <option name="timeStamp" value="403" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/maleshen/ssm/capp/model/SSMConnectorHandler.java</url>
-          <line>26</line>
-          <properties />
-          <option name="timeStamp" value="405" />
-        </line-breakpoint>
-      </breakpoints>
       <option name="time" value="408" />
     </breakpoint-manager>
     <watches-manager />
@@ -1450,11 +1361,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/maleshen/ssm/capp/model/SSMConnectorHandler.java">
+    <entry file="file://$PROJECT_DIR$/src/com/maleshen/ssm/capp/view/AuthRegSceneController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="38" column="0" selection-start-line="38" selection-start-column="0" selection-end-line="38" selection-end-column="0" />
+        <state relative-caret-position="104">
+          <caret line="159" column="0" selection-start-line="159" selection-start-column="0" selection-end-line="159" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/maleshen/ssm/capp/view/FindAddContactsController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1552">
+          <caret line="39" column="13" selection-start-line="39" selection-start-column="13" selection-end-line="39" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/maleshen/ssm/capp/view/MainSceneController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="382">
+          <caret line="221" column="39" selection-start-line="221" selection-start-column="39" selection-end-line="221" selection-end-column="39" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#fillChat#0;class#MainSceneController#0" expanded="false" />
+            <element signature="method#sendMessage#0;class#MainSceneController#0" expanded="false" />
+            <element signature="method#getMessage#0;class#MainSceneController#0" expanded="false" />
+            <element signature="method#setButtonEffect#0;class#MainSceneController#0" expanded="false" />
+            <element signature="method#openDialogPane#0;class#MainSceneController#0" expanded="false" />
+            <element signature="class#Renew#0;class#MainSceneController#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1474,37 +1411,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/maleshen/ssm/capp/view/FindAddContactsController.java">
+    <entry file="file://$PROJECT_DIR$/src/com/maleshen/ssm/capp/model/SSMConnectorHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2592">
-          <caret line="146" column="17" selection-start-line="146" selection-start-column="17" selection-end-line="146" selection-end-column="17" />
+        <state relative-caret-position="972">
+          <caret line="54" column="13" selection-start-line="54" selection-start-column="13" selection-end-line="54" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/maleshen/ssm/capp/view/AuthRegSceneController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="230">
-          <caret line="166" column="28" selection-start-line="161" selection-start-column="8" selection-end-line="166" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/maleshen/ssm/capp/view/MainSceneController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
-          <caret line="234" column="29" selection-start-line="234" selection-start-column="29" selection-end-line="234" selection-end-column="29" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#fillChat#0;class#MainSceneController#0" expanded="false" />
-            <element signature="method#sendMessage#0;class#MainSceneController#0" expanded="false" />
-            <element signature="method#getMessage#0;class#MainSceneController#0" expanded="false" />
-            <element signature="method#setButtonEffect#0;class#MainSceneController#0" expanded="false" />
-            <element signature="method#openDialogPane#0;class#MainSceneController#0" expanded="false" />
-            <element signature="method#findAddContact#0;class#MainSceneController#0" expanded="false" />
-            <element signature="class#Renew#0;class#MainSceneController#0" expanded="false" />
           </folding>
         </state>
       </provider>

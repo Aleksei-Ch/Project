@@ -24,7 +24,7 @@ class SSMConnectorHandler extends SimpleChannelInboundHandler<String> {
             }
 
             //Auth or registration complete
-            if (msg.startsWith(Flags.USER)) {
+            else if (msg.startsWith(Flags.USER)) {
                 SSMConnector.authenticated = true;
                 SSMConnector.answered = true;
                 SSMConnector.registered = true;
@@ -41,11 +41,12 @@ class SSMConnectorHandler extends SimpleChannelInboundHandler<String> {
                 ClientApp.contactList = FXCollections.observableArrayList();
                 //Fill
                 ClientApp.contactList.addAll(ArrayListExt.getFromString(msg));
-            } else if (msg.startsWith(Flags.UNICAST_MSG)){
+            }
+            else if (msg.startsWith(Flags.UNICAST_MSG)){
                 MainSceneController.getMessage(Message.getFromString(msg));
-            } else
+            }
             // Look for message with search users results
-            if (msg.startsWith(Flags.FOUND_REQ)){
+            else if (msg.startsWith(Flags.FOUND_REQ)){
                 SSMConnector.searchCompleted = true;
                 if (msg.split(Flags.FOUND_SPLITTER).length > 1){
                     FindAddContactsController.getResult(

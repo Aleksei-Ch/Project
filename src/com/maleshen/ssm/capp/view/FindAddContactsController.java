@@ -32,13 +32,15 @@ public class FindAddContactsController extends DefaultSceneController {
     @FXML
     private Label success;
 
-    private static ObservableList<User> resultSet = FXCollections.observableArrayList();
+    private static ObservableList<User> resultSet;
     private static boolean founded = true;
     private static boolean error = false;
 
     @FXML
     @Override
     protected void initialize() {
+        resultSet = FXCollections.observableArrayList();
+
         final ContextMenu contextMenu = new ContextMenu();
 
         MenuItem add = new MenuItem("Add to contacts");
@@ -141,6 +143,7 @@ public class FindAddContactsController extends DefaultSceneController {
                 }
 
                 results.setItems(resultSet);
+
                 if (!error) {
                     results.setVisible(founded);
                     notFound.setVisible(!founded);
