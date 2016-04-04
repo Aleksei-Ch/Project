@@ -1,10 +1,10 @@
-package com.maleshen.ssm.sapp.model;
+package com.maleshen.ssm.sapp.model.logic;
 
 import com.maleshen.ssm.entity.ArrayListExt;
 import com.maleshen.ssm.entity.Message;
 import com.maleshen.ssm.entity.User;
-import com.maleshen.ssm.sapp.model.interfaces.SSMDataBaseConnector;
-import com.maleshen.ssm.security.SsmCrypt;
+import com.maleshen.ssm.sapp.model.interfaces.DBConnector;
+import com.maleshen.ssm.sapp.model.security.Crypt;
 import com.mysql.jdbc.PreparedStatement;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -13,13 +13,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
-public class SSMDataBaseWorker {
+public class DBWorker {
 
-    private static SSMDataBaseConnector ssmDataBaseConnector = new SSMSimpleDataBaseConnector();
+    private static DBConnector DBConnector = new DBConnectorImpl();
     private static ResultSet resultSet;
 
     public static boolean putMessage(Message m) throws SQLException, ClassNotFoundException {
-        PreparedStatement preparedStatement = (PreparedStatement) ssmDataBaseConnector.getConnection()
+        PreparedStatement preparedStatement = (PreparedStatement) DBConnector.getConnection()
                 .prepareStatement(SQLQueries.PUT_MESSAGE);
         preparedStatement.setString(1, m.getFromUser());
         preparedStatement.setString(2, m.getToUser());
@@ -32,7 +32,7 @@ public class SSMDataBaseWorker {
     public static ObservableList<Message> getMessagesForUser(String userLogin) throws ClassNotFoundException, SQLException {
         ObservableList<Message> messages = FXCollections.observableArrayList();
 
-        PreparedStatement preparedStatement = (PreparedStatement) ssmDataBaseConnector.getConnection()
+        PreparedStatement preparedStatement = (PreparedStatement) DBConnector.getConnection()
                 .prepareStatement(SQLQueries.GET_MESSAGES_FOR_USER);
         preparedStatement.setString(1, userLogin);
 
@@ -43,10 +43,10 @@ public class SSMDataBaseWorker {
             String time = resultSet.getString("time");
             String msg = resultSet.getString("msg");
 
-            messages.add(new Message(from, userLogin, msg, time, false));
+            messages.add(new Message(from, userLogin, msg, time));
         }
 
-        preparedStatement = (PreparedStatement) ssmDataBaseConnector.getConnection()
+        preparedStatement = (PreparedStatement) DBConnector.getConnection()
                 .prepareStatement(SQLQueries.DELETE_DELIVERED_MSGS);
         preparedStatement.setString(1, userLogin);
 
@@ -55,10 +55,9 @@ public class SSMDataBaseWorker {
         return messages;
     }
 
-
     //Getting contact list
     public static ArrayListExt<User> getContactList(int userID) throws ClassNotFoundException, SQLException {
-        PreparedStatement preparedStatement = (PreparedStatement) ssmDataBaseConnector.getConnection()
+        PreparedStatement preparedStatement = (PreparedStatement) DBConnector.getConnection()
                 .prepareStatement(SQLQueries.GET_CONTACT_LIST);
         preparedStatement.setInt(1, userID);
 
@@ -75,7 +74,7 @@ public class SSMDataBaseWorker {
 
     //Getting USER by login
     static User getUserByLogin(String login) throws ClassNotFoundException, SQLException {
-        PreparedStatement preparedStatement = (PreparedStatement) ssmDataBaseConnector.getConnection()
+        PreparedStatement preparedStatement = (PreparedStatement) DBConnector.getConnection()
                 .prepareStatement(SQLQueries.GET_USER_BY_LOGIN);
         preparedStatement.setString(1, login);
 
@@ -96,7 +95,7 @@ public class SSMDataBaseWorker {
     }
 
     static User getUserByID(Integer id) throws ClassNotFoundException, SQLException {
-        PreparedStatement preparedStatement = (PreparedStatement) ssmDataBaseConnector.getConnection()
+        PreparedStatement preparedStatement = (PreparedStatement) DBConnector.getConnection()
                 .prepareStatement(SQLQueries.GET_USER_BY_ID);
         preparedStatement.setInt(1, id);
 
@@ -121,10 +120,10 @@ public class SSMDataBaseWorker {
      */
     public static User registerUser(User user) throws ClassNotFoundException, SQLException {
 
-        PreparedStatement preparedStatement = (PreparedStatement) ssmDataBaseConnector.getConnection()
+        PreparedStatement preparedStatement = (PreparedStatement) DBConnector.getConnection()
                 .prepareStatement(SQLQueries.USER_REGISTRATION);
         preparedStatement.setString(1, user.getLogin());
-        preparedStatement.setString(2, SsmCrypt.getHashPass(user.getPass()));
+        preparedStatement.setString(2, Crypt.getHashPass(user.getPass()));
         preparedStatement.setString(3, user.getName());
         preparedStatement.setString(4, user.getLastName());
         preparedStatement.setDate(5, new java.sql.Date(user.getBirthDate().getTime()));
@@ -139,7 +138,7 @@ public class SSMDataBaseWorker {
 
         for (String keyword : keywords.split(" ")) {
             keyword = "%"+keyword+"%";
-            PreparedStatement preparedStatement = (PreparedStatement) ssmDataBaseConnector.getConnection()
+            PreparedStatement preparedStatement = (PreparedStatement) DBConnector.getConnection()
                     .prepareStatement(SQLQueries.FOUND_USERS);
             preparedStatement.setString(1, keyword);
             preparedStatement.setString(2, keyword);
@@ -166,11 +165,43 @@ public class SSMDataBaseWorker {
     }
 
     public static void setContacts(int firstID, int secondID) throws ClassNotFoundException, SQLException {
-        PreparedStatement preparedStatement = (PreparedStatement) ssmDataBaseConnector.getConnection()
+        PreparedStatement preparedStatement = (PreparedStatement) DBConnector.getConnection()
                 .prepareStatement(SQLQueries.SET_CONTACTS);
         preparedStatement.setInt(1, firstID);
         preparedStatement.setInt(2, secondID);
 
         preparedStatement.execute();
+    }
+
+    public static void removeContacts(int firstID, int secondID) throws ClassNotFoundException, SQLException {
+        PreparedStatement preparedStatement = (PreparedStatement) DBConnector.getConnection()
+                .prepareStatement(SQLQueries.REMOVE_CONTACTS);
+        preparedStatement.setInt(1, firstID);
+        preparedStatement.setInt(2, secondID);
+
+        preparedStatement.execute();
+    }
+
+    public static void updateUser(User user) throws ClassNotFoundException, SQLException {
+        if (user.getPass() != null && !user.getPass().equals("")) {
+            PreparedStatement preparedStatement = (PreparedStatement) DBConnector.getConnection()
+                    .prepareStatement(SQLQueries.UPDATE_USER_PWD);
+            preparedStatement.setString(5, user.getLogin());
+            preparedStatement.setString(1, Crypt.getHashPass(user.getPass()));
+            preparedStatement.setString(2, user.getName());
+            preparedStatement.setString(3, user.getLastName());
+            preparedStatement.setDate(4, new java.sql.Date(user.getBirthDate().getTime()));
+
+            preparedStatement.execute();
+        } else {
+            PreparedStatement preparedStatement = (PreparedStatement) DBConnector.getConnection()
+                    .prepareStatement(SQLQueries.UPDATE_USER);
+            preparedStatement.setString(4, user.getLogin());
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, user.getLastName());
+            preparedStatement.setDate(3, new java.sql.Date(user.getBirthDate().getTime()));
+
+            preparedStatement.execute();
+        }
     }
 }

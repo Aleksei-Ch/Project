@@ -1,9 +1,9 @@
 package com.maleshen.ssm.capp.model;
 
-import com.maleshen.ssm.capp.ClientApp;
 import com.maleshen.ssm.entity.AuthInfo;
 import com.maleshen.ssm.entity.User;
-import com.maleshen.ssm.template.Flags;
+import com.maleshen.ssm.template.Headers;
+import com.maleshen.ssm.template.MsgManager;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -16,7 +16,7 @@ import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import javax.net.ssl.SSLException;
 import java.util.concurrent.TimeUnit;
 
-public class SSMConnector {
+public class ClientConnector {
     public static Boolean authenticated = false;
     static Boolean registered = false;
     static Boolean answered = false;
@@ -28,7 +28,7 @@ public class SSMConnector {
     private static Bootstrap b;
     private static EventLoopGroup group;
 
-    public SSMConnector() throws SSLException { }
+    public ClientConnector() throws SSLException { }
 
     private static void init(){
         ch = null;
@@ -44,7 +44,7 @@ public class SSMConnector {
     private static boolean authenticate(AuthInfo authInfo, Channel ch) throws InterruptedException {
 
         answered = false;
-        ch.writeAndFlush(authInfo.toString() + "\n");
+        ch.writeAndFlush(MsgManager.createMsg(Headers.AUTH, authInfo.toString()));
 
         //Waiting for answer.
         do {
@@ -59,7 +59,7 @@ public class SSMConnector {
     private static boolean registrate(User user, Channel ch) throws InterruptedException {
 
         answered = false;
-        ch.writeAndFlush(user.getRegInfo() + "\n");
+        ch.writeAndFlush(MsgManager.createMsg(Headers.REG, user.getRegInfo()));
 
         //Waiting for answer.
         do {
@@ -92,7 +92,7 @@ public class SSMConnector {
 
             b.group(group)
                     .channel(NioSocketChannel.class)
-                    .handler(new SSMConnectorInitializer(sslCtx));
+                    .handler(new ClientConnectorInitializer(sslCtx));
 
             ch = b.connect(HOST, PORT).sync().channel();
 
@@ -165,7 +165,7 @@ public class SSMConnector {
 
             b.group(group)
                     .channel(NioSocketChannel.class)
-                    .handler(new SSMConnectorInitializer(sslCtx));
+                    .handler(new ClientConnectorInitializer(sslCtx));
 
             ch = b.connect(HOST, PORT).sync().channel();
 
@@ -183,12 +183,11 @@ public class SSMConnector {
     // Autorenew contact list and other shit.
     public static void renewData(){
         //Contact list request
-        ch.writeAndFlush(Flags.GET_CONTACTS + "\n");
-
+        ch.writeAndFlush(MsgManager.createMsg(Headers.CONTACT_LIST));
     }
 
     public static void sendMessage(String message){
-        ch.writeAndFlush(message + "\n");
+        ch.writeAndFlush(MsgManager.createMsg(Headers.MSG, message));
     }
 
     /** This method formed and write message for server
@@ -199,11 +198,7 @@ public class SSMConnector {
     public static void sendFoundRequest(String keywords) throws InterruptedException {
         searchCompleted = false;
 
-        ch.writeAndFlush(Flags.FOUND_REQ +
-                Flags.FOUND_SPLITTER +
-//                ClientApp.currentUser.getLogin() +
-//                Flags.FOUND_SPLITTER +
-                keywords + "\n");
+        ch.writeAndFlush(MsgManager.createMsg(Headers.FOUND_USERS, keywords));
 
         //Waiting for answer.
         do {
@@ -214,13 +209,18 @@ public class SSMConnector {
     }
 
     /**
-     *
      * @param info : string contains ID both users
-     *             pattern: "ID_CURRENT_USER"+USER_SPLITTER+"ID_REMOTE_USER"
-     *             without ""
      */
     public static void sendContactsReq(String info){
-        ch.writeAndFlush(Flags.SET_CONTACTS + Flags.SETTER_SPLITTER + info + "\n");
+        ch.writeAndFlush(MsgManager.createMsg(Headers.ADD_CONTACT, info));
+    }
+
+    public static void sendContactRemReq(String info){
+        ch.writeAndFlush(MsgManager.createMsg(Headers.REM_CONTACT, info));
+    }
+
+    public static void updateMe(User user){
+        ch.writeAndFlush(MsgManager.createMsg(Headers.UPDATE_ME, user.getUpdateInfo()));
     }
 
 }

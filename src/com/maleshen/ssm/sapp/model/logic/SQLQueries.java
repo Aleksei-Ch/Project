@@ -1,4 +1,4 @@
-package com.maleshen.ssm.sapp.model;
+package com.maleshen.ssm.sapp.model.logic;
 
 class SQLQueries {
     static final String GET_USER_BY_LOGIN = "SELECT * FROM users WHERE login = ?";
@@ -15,4 +15,9 @@ class SQLQueries {
     static final String FOUND_USERS = "SELECT * FROM users WHERE login LIKE ? OR name LIKE ? OR lastname LIKE ?";
     static final String SET_CONTACTS = "INSERT INTO contacts(id_user, id_contact) " +
                                         "VALUES (?, ?)";
+    static final String REMOVE_CONTACTS = "DELETE FROM contacts WHERE id_user = ? AND id_contact = ?";
+    static final String UPDATE_USER_PWD = "UPDATE users SET hash_pass = ?, name = ?, lastname = ?, birthdate = ? " +
+                                          "WHERE login = ?";
+    static final String UPDATE_USER = "UPDATE users SET name = ?, lastname = ?, birthdate = ? " +
+                                      "WHERE login = ?";
 }

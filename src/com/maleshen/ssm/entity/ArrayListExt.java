@@ -15,11 +15,10 @@ public class ArrayListExt<User> extends ArrayList<User> {
 
         StringBuilder result = new StringBuilder();
 
-        result.append(Flags.GET_CONTACTS);
-
-        for(User u : this){
-            result.append(Flags.ARRAYLISTEXT_SPLITTER)
-                    .append(u.toString());
+        for(int i = 0; i < this.size(); i++){
+            result.append(this.get(i).toString());
+            if (i != this.size() - 1)
+                result.append(Flags.ARRAYLISTEXT_SPLITTER);
         }
 
         return result.toString();
@@ -29,14 +28,11 @@ public class ArrayListExt<User> extends ArrayList<User> {
 
         ArrayListExt<com.maleshen.ssm.entity.User> contacts = new ArrayListExt<>();
 
-        String[] tmp = s.split(Flags.ARRAYLISTEXT_SPLITTER);
+        String[] entities = s.split(Flags.ARRAYLISTEXT_SPLITTER);
 
-        if (tmp[0].equals(Flags.GET_CONTACTS) && tmp.length > 1){
-            for (int i = 1; i < tmp.length; i++) {
-                contacts.add(com.maleshen.ssm.entity.User.getFromString(tmp[i]));
-            }
+        for (String entity : entities) {
+            contacts.add(com.maleshen.ssm.entity.User.getFromString(entity));
         }
-
         return contacts;
     }
 }

@@ -9,10 +9,10 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.ssl.SslContext;
 
-class SSMConnectorInitializer extends ChannelInitializer<SocketChannel> {
+class ClientConnectorInitializer extends ChannelInitializer<SocketChannel> {
     private final SslContext sslCtx;
 
-    SSMConnectorInitializer(SslContext sslCtx) {
+    ClientConnectorInitializer(SslContext sslCtx) {
         this.sslCtx = sslCtx;
     }
 
@@ -25,7 +25,7 @@ class SSMConnectorInitializer extends ChannelInitializer<SocketChannel> {
         // and accept any invalid certificates in the client side.
         // You will need something more complicated to identify both
         // and server in the real world.
-        pipeline.addLast(sslCtx.newHandler(ch.alloc(), SSMConnector.HOST, SSMConnector.PORT));
+        pipeline.addLast(sslCtx.newHandler(ch.alloc(), ClientConnector.HOST, ClientConnector.PORT));
 
         // On top of the SSL handler, add the text line codec.
         pipeline.addLast(new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()));
@@ -33,6 +33,6 @@ class SSMConnectorInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(new StringEncoder());
 
         // and then business logic.
-        pipeline.addLast(new SSMConnectorHandler());
+        pipeline.addLast(new ClientChanelHandler());
     }
 }

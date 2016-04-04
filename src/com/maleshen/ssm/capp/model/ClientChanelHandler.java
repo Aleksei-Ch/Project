@@ -6,28 +6,29 @@ import com.maleshen.ssm.capp.view.MainSceneController;
 import com.maleshen.ssm.entity.ArrayListExt;
 import com.maleshen.ssm.entity.Message;
 import com.maleshen.ssm.entity.User;
-import com.maleshen.ssm.template.Flags;
+import com.maleshen.ssm.template.Headers;
+import com.maleshen.ssm.template.MsgManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import javafx.collections.FXCollections;
 
-class SSMConnectorHandler extends SimpleChannelInboundHandler<String> {
+class ClientChanelHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, String msg){
         //Auth not complete
-        if (!SSMConnector.authenticated) {
+        if (!ClientConnector.authenticated) {
 
-            if (msg.startsWith(Flags.AUTH_BAD) ||
-                    msg.startsWith(Flags.REGFAULT)) {
-                SSMConnector.answered = true;
+            if (msg.startsWith(Headers.AUTH_REG_BAD)){
+                ClientConnector.answered = true;
             }
-
             //Auth or registration complete
-            else if (msg.startsWith(Flags.USER)) {
-                SSMConnector.authenticated = true;
-                SSMConnector.answered = true;
-                SSMConnector.registered = true;
+            else if (msg.startsWith(Headers.AUTH_REG_GOOD)) {
+                ClientConnector.authenticated = true;
+                ClientConnector.answered = true;
+                ClientConnector.registered = true;
+
+                msg = MsgManager.getMsgData(Headers.AUTH_REG_GOOD, msg);
 
                 //Parsing user from result
                 ClientApp.currentUser = User.getFromString(msg);
@@ -36,22 +37,26 @@ class SSMConnectorHandler extends SimpleChannelInboundHandler<String> {
         // Chat logic.
         else {
             //First time we need to get contact list. So look for them
-            if (msg.startsWith(Flags.GET_CONTACTS)){
+            if (msg.startsWith(Headers.CONTACT_LIST)){
+
+                msg = MsgManager.getMsgData(Headers.CONTACT_LIST, msg);
                 //Init
                 ClientApp.contactList = FXCollections.observableArrayList();
                 //Fill
                 ClientApp.contactList.addAll(ArrayListExt.getFromString(msg));
             }
-            else if (msg.startsWith(Flags.UNICAST_MSG)){
+            //Simple message for me
+            else if (msg.startsWith(Headers.MSG)){
+                msg = MsgManager.getMsgData(Headers.MSG, msg);
                 MainSceneController.getMessage(Message.getFromString(msg));
             }
             // Look for message with search users results
-            else if (msg.startsWith(Flags.FOUND_REQ)){
-                SSMConnector.searchCompleted = true;
-                if (msg.split(Flags.FOUND_SPLITTER).length > 1){
-                    FindAddContactsController.getResult(
-                            ArrayListExt.getFromString(msg.split(Flags.FOUND_SPLITTER)[1]));
-                }
+            else if (msg.startsWith(Headers.FOUND_USERS)){
+                ClientConnector.searchCompleted = true;
+
+                msg = MsgManager.getMsgData(Headers.FOUND_USERS, msg);
+
+                FindAddContactsController.getResult(ArrayListExt.getFromString(msg));
             }
         }
     }

@@ -1,7 +1,7 @@
 package com.maleshen.ssm.capp.view;
 
 import com.maleshen.ssm.capp.ClientApp;
-import com.maleshen.ssm.capp.model.SSMConnector;
+import com.maleshen.ssm.capp.model.ClientConnector;
 import com.maleshen.ssm.entity.ArrayListExt;
 import com.maleshen.ssm.entity.User;
 import com.maleshen.ssm.template.Flags;
@@ -81,7 +81,7 @@ public class FindAddContactsController extends DefaultSceneController {
         notFound.setText("No matches founded.");
         if (!keywords.getText().equals("")) {
             resultSet = FXCollections.observableArrayList();
-            SSMConnector.sendFoundRequest(keywords.getText());
+            ClientConnector.sendFoundRequest(keywords.getText());
         }
     }
 
@@ -99,10 +99,10 @@ public class FindAddContactsController extends DefaultSceneController {
             error();
             return;
         }
-        SSMConnector.sendContactsReq(ClientApp.currentUser.getId() +
+        ClientConnector.sendContactsReq(ClientApp.currentUser.getId() +
                 Flags.USER_SPLITTER + user.getId());
         success.setVisible(true);
-        SSMConnector.renewData();
+        ClientConnector.renewData();
     }
 
     public static void getResult(ArrayListExt<User> results) {

@@ -1,12 +1,15 @@
 package com.maleshen.ssm.capp.view;
 
 import com.maleshen.ssm.capp.ClientApp;
-import com.maleshen.ssm.capp.model.SSMConnector;
+import com.maleshen.ssm.capp.model.ClientConnector;
 import com.maleshen.ssm.entity.Message;
 import com.maleshen.ssm.entity.User;
+import com.maleshen.ssm.template.Flags;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -79,12 +82,32 @@ public class MainSceneController extends DefaultSceneController {
     static Map<String, ObservableList<Message>> dialogs = new HashMap();
     //Find contacts scene
     private Stage findAddContactsStage = new Stage();
+    private Stage infoStage = new Stage();
     static boolean findIsOpen = false;
 
 
     @Override
     @FXML
     protected void initialize() {
+        final ContextMenu contextMenu = new ContextMenu();
+
+        MenuItem remove = new MenuItem("Remove from contacts");
+
+        remove.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+                removeContact(contacts.getSelectionModel().getSelectedItem());
+            }
+        });
+
+        MenuItem information = new MenuItem("Info");
+
+        information.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e) {
+                openUserInfo(contacts.getSelectionModel().getSelectedItem());
+            }
+        });
+
+        contextMenu.getItems().addAll(information, remove);
 
         //Setting up buttons.
         add.setGraphic(new ImageView(
@@ -104,9 +127,7 @@ public class MainSceneController extends DefaultSceneController {
         setButtonEffect(send);
 
         //Fill user info
-        name.setText(ClientApp.currentUser.getName());
-        lastName.setText(ClientApp.currentUser.getLastName());
-        login.setText(ClientApp.currentUser.getLogin());
+        fillUserInfo();
 
         //TODO. Avatars.
         avatar.setImage(new Image(String.valueOf(getClass().getResource("img/noav.png"))));
@@ -119,14 +140,29 @@ public class MainSceneController extends DefaultSceneController {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getClickCount() > 0) {
-                    if (contacts.getSelectionModel().getSelectedItem() != null)
+                    if (contacts.getSelectionModel().getSelectedItem() != null) {
                         openDialogPane(contacts.getSelectionModel().getSelectedItem());
+                        contacts.setContextMenu(contextMenu);
+                    }
                 }
             }
         });
 
         //Some logic of renew contact list or any else data.
         new Renew();
+    }
+
+    private void fillUserInfo(){
+        name.setText(ClientApp.currentUser.getName());
+        lastName.setText(ClientApp.currentUser.getLastName());
+        login.setText(ClientApp.currentUser.getLogin());
+    }
+
+    private void removeContact(User user){
+        contacts.getItems().remove(user);
+        dialogs.remove(user.getLogin());
+        ClientConnector.sendContactRemReq(ClientApp.currentUser.getId() +
+                Flags.USER_SPLITTER + user.getId());
     }
 
     /** This method must fill chat table
@@ -152,11 +188,10 @@ public class MainSceneController extends DefaultSceneController {
             Message m = new Message(ClientApp.currentUser.getLogin(),
                     contacts.getSelectionModel().getSelectedItem().getLogin(),
                     msg.getText(),
-                    (new SimpleDateFormat("HH:mm")).format(Calendar.getInstance().getTime()),
-                    false);
+                    (new SimpleDateFormat("HH:mm")).format(Calendar.getInstance().getTime()));
 
             dialogs.get(contacts.getSelectionModel().getSelectedItem().getLogin()).add(m);
-            SSMConnector.sendMessage(m.toString());
+            ClientConnector.sendMessage(m.toString());
             msg.setText("");
         }
     }
@@ -165,6 +200,7 @@ public class MainSceneController extends DefaultSceneController {
         if (dialogs.keySet().contains(message.getFromUser())){
             dialogs.get(message.getFromUser()).add(message);
         } else {
+            //TODO. Contact request
             dialogs.put(message.getFromUser(), FXCollections.observableArrayList());
             dialogs.get(message.getFromUser()).add(message);
         }
@@ -212,7 +248,6 @@ public class MainSceneController extends DefaultSceneController {
             Parent parent = loader.load();
 
             findAddContactsStage.setScene(new Scene(parent));
-            findAddContactsStage.setAlwaysOnTop(true);
             findAddContactsStage.setResizable(false);
             findAddContactsStage.show();
             findAddContactsStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -231,14 +266,38 @@ public class MainSceneController extends DefaultSceneController {
         loader.setLocation(ClientApp.class.getResource("view/AuthRegScene.fxml"));
         Parent parent = loader.load();
 
-        SSMConnector.authenticated = false;
-        SSMConnector.close();
+        ClientConnector.authenticated = false;
+        ClientConnector.close();
         ClientApp.currentUser = null;
         dialogs = new HashMap<>();
 
 
         primaryStage.setScene(new Scene(parent));
         primaryStage.show();
+    }
+
+    @FXML
+    private void info(){
+        openUserInfo(ClientApp.currentUser);
+    }
+
+    private void openUserInfo(User user){
+        InfoSceneController.user = user;
+
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(ClientApp.class.getResource("view/InfoScene.fxml"));
+
+        Parent parent = null;
+        try {
+            parent = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        assert parent != null;
+        infoStage.setScene(new Scene(parent));
+        infoStage.setResizable(false);
+        infoStage.show();
     }
 
     /** Inner class for daemon thread
@@ -266,14 +325,16 @@ public class MainSceneController extends DefaultSceneController {
         @Override
         public void run() {
             while (true) {
-                if (SSMConnector.authenticated == null || !SSMConnector.authenticated) {
+                if (ClientConnector.authenticated == null || !ClientConnector.authenticated) {
                     break;
                 }
                 //Send request for updates
-                SSMConnector.renewData();
+                ClientConnector.renewData();
 
                 //Wait for a two second
                 wait(2000);
+
+                Platform.runLater(MainSceneController.this::fillUserInfo);
 
                 //Push updated data
                 if (ClientApp.contactList != null){
@@ -283,13 +344,11 @@ public class MainSceneController extends DefaultSceneController {
                 }
                 //Setting up dialogs
                 if (ClientApp.contactList != null)
-                    for (User user : ClientApp.contactList){
-                        if (!dialogs.containsKey(user.getLogin()))
-                            dialogs.put(user.getLogin(), FXCollections.observableArrayList());
-                    }
-
-                //Wait for a minute
-                wait(60000);
+                    ClientApp.contactList.stream().filter(
+                            user -> !dialogs.containsKey(user.getLogin())).forEach(
+                            user -> dialogs.put(user.getLogin(), FXCollections.observableArrayList()));
+                //Wait for a 30 sec
+                wait(30000);
             }
         }
     }

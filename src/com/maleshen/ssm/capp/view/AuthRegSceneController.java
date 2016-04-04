@@ -1,7 +1,7 @@
 package com.maleshen.ssm.capp.view;
 
 import com.maleshen.ssm.capp.ClientApp;
-import com.maleshen.ssm.capp.model.SSMConnector;
+import com.maleshen.ssm.capp.model.ClientConnector;
 import com.maleshen.ssm.entity.AuthInfo;
 import com.maleshen.ssm.entity.User;
 import javafx.event.EventHandler;
@@ -75,7 +75,7 @@ public class AuthRegSceneController extends DefaultSceneController {
         if (login.getText().equals("") || pass.getText().equals("") || address.getText().equals("")){
             authError.setText("Please, enter correct values.");
         } else {
-            int code = SSMConnector.establishingConnection(new AuthInfo(login.getText(), pass.getText()),
+            int code = ClientConnector.establishingConnection(new AuthInfo(login.getText(), pass.getText()),
                     address.getText(),
                     Integer.parseInt(port.getText()));
 
@@ -133,7 +133,7 @@ public class AuthRegSceneController extends DefaultSceneController {
                     rLastName.getText(), bd);
 
             try {
-                int code = SSMConnector.establishingConnection(userForReg,
+                int code = ClientConnector.establishingConnection(userForReg,
                         rAddress.getText(), Integer.parseInt(rPort.getText()));
 
                 switch (code){
@@ -168,7 +168,7 @@ public class AuthRegSceneController extends DefaultSceneController {
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
-                SSMConnector.close();
+                ClientConnector.close();
                 System.exit(0);
             }
         });

@@ -1,11 +1,11 @@
-package com.maleshen.ssm.sapp.model;
+package com.maleshen.ssm.sapp.model.logic;
 
-import com.maleshen.ssm.sapp.model.interfaces.SSMDataBaseConnector;
+import com.maleshen.ssm.sapp.model.interfaces.DBConnector;
 
 import java.sql.*;
 import java.util.Properties;
 
-public class SSMSimpleDataBaseConnector implements SSMDataBaseConnector {
+public class DBConnectorImpl implements DBConnector {
     private static final String url = "jdbc:mysql://localhost:3306/ssm";
     private static final String user = "ssm";
     private static final String password = "NyQign8S";

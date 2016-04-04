@@ -59,7 +59,7 @@
                         <Insets />
                      </GridPane.margin>
                   </Button>
-                  <Button fx:id="info" mnemonicParsing="false" styleClass="menuButton" GridPane.columnIndex="1">
+                  <Button fx:id="info" mnemonicParsing="false" onAction="#info" styleClass="menuButton" GridPane.columnIndex="1">
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>

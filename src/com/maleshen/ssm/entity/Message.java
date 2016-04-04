@@ -9,7 +9,6 @@ public class Message {
     private final String msg;
     private final String fromUser;
     private final String toUser;
-    private boolean delivered;
     private int id = 0;
     private String time;
 
@@ -17,31 +16,12 @@ public class Message {
     private final Pattern timePatt = Pattern.compile(regexp);
     private Matcher matcher;
 
-    public Message(String fromUser, String toUser, String msg, String time, boolean delivered) {
+    public Message(String fromUser, String toUser, String msg, String time) {
         this.msg = msg;
         this.fromUser = fromUser;
         this.toUser = toUser;
         matcher = timePatt.matcher(time);
         this.time = matcher.matches() ? time : "00:00";
-        this.delivered = delivered;
-    }
-
-    /**
-     * Sets delivered status.
-     *
-     * @param delivered New value of delivered.
-     */
-    public void setDelivered(boolean delivered) {
-        this.delivered = delivered;
-    }
-
-    /**
-     * Gets delivered.
-     *
-     * @return Value of delivered.
-     */
-    public boolean isDelivered() {
-        return delivered;
     }
 
     /**
@@ -75,9 +55,7 @@ public class Message {
 
     @Override
     public String toString(){
-        return Flags.UNICAST_MSG +
-                Flags.MESSAGE_SPLITTER +
-                getTime() +
+        return  getTime() +
                 Flags.MESSAGE_SPLITTER +
                 getFromUser() +
                 Flags.MESSAGE_SPLITTER +
@@ -89,24 +67,23 @@ public class Message {
     public static Message getFromString(String msg){
         String[] parser = msg.split(Flags.MESSAGE_SPLITTER);
 
-        if (parser.length >= 5 &&
-                parser[0].equals(Flags.UNICAST_MSG)){
-            String time = parser[1];
-            String fromUser = parser[2];
-            String toUser = parser[3];
+        if (parser.length >= 4){
+            String time = parser[0];
+            String fromUser = parser[1];
+            String toUser = parser[2];
             String message = "";
-            if (parser.length > 5){
-                for (int i = 4; i < parser.length; i++){
+            if (parser.length > 4){
+                for (int i = 3; i < parser.length; i++){
                     message = parser[i];
                     if (i != parser.length - 1){
                         message = message + Flags.MESSAGE_SPLITTER;
                     }
                 }
             } else {
-                message = parser[4];
+                message = parser[3];
             }
             if (fromUser != null && toUser != null){
-                return new Message(fromUser, toUser, message, time, false);
+                return new Message(fromUser, toUser, message, time);
             }
         }
         return null;

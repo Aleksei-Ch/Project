@@ -31,19 +31,16 @@ public class AuthInfo {
 
     @Override
     public String toString(){
-        return Flags.AUTH_REQ +
-                Flags.AUTHINFO_SPLITTER +
-                getLogin() +
+        return  getLogin() +
                 Flags.AUTHINFO_SPLITTER +
                 getPass();
     }
 
     public static AuthInfo getFromString(String authInfo){
-        if (authInfo.split(Flags.AUTHINFO_SPLITTER).length == 3 &&
-                authInfo.split(Flags.AUTHINFO_SPLITTER)[0].equals(Flags.AUTH_REQ)){
+        if (authInfo.split(Flags.AUTHINFO_SPLITTER).length == 2){
             return new AuthInfo(
-                    authInfo.split(Flags.AUTHINFO_SPLITTER)[1],
-                    authInfo.split(Flags.AUTHINFO_SPLITTER)[2]
+                    authInfo.split(Flags.AUTHINFO_SPLITTER)[0],
+                    authInfo.split(Flags.AUTHINFO_SPLITTER)[1]
             );
         }
         return null;

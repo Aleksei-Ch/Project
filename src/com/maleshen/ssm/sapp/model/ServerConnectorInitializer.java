@@ -1,6 +1,5 @@
-package com.maleshen.ssm.sapp;
+package com.maleshen.ssm.sapp.model;
 
-import com.maleshen.ssm.sapp.model.SSMCleaner;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -10,11 +9,11 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.ssl.SslContext;
 
-public class SecureChatServerInitializer extends ChannelInitializer<SocketChannel> {
+class ServerConnectorInitializer extends ChannelInitializer<SocketChannel> {
 
     private final SslContext sslCtx;
 
-    public SecureChatServerInitializer(SslContext sslCtx) {
+    ServerConnectorInitializer(SslContext sslCtx) {
         this.sslCtx = sslCtx;
     }
 
@@ -35,9 +34,6 @@ public class SecureChatServerInitializer extends ChannelInitializer<SocketChanne
         pipeline.addLast(new StringEncoder());
 
         // and then business logic.
-        pipeline.addLast(new SecureChatServerHandler());
-
-        // and cleaner channels.
-        new SSMCleaner();
+        pipeline.addLast(new ServerChannelsHandler());
     }
 }

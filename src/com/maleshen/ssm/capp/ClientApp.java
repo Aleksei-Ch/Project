@@ -34,7 +34,6 @@ public class ClientApp extends Application {
             Parent parent = loader.load();
 
             primaryStage.setScene(new Scene(parent));
-            primaryStage.setAlwaysOnTop(true);
             primaryStage.show();
 
         } catch (IOException e) {
