@@ -1,13 +1,13 @@
 package com.maleshen.ssm.capp.model;
 
 import com.maleshen.ssm.capp.ClientApp;
+import com.maleshen.ssm.capp.model.security.MsgManager;
 import com.maleshen.ssm.capp.view.FindAddContactsController;
 import com.maleshen.ssm.capp.view.MainSceneController;
 import com.maleshen.ssm.entity.ArrayListExt;
 import com.maleshen.ssm.entity.Message;
 import com.maleshen.ssm.entity.User;
 import com.maleshen.ssm.template.Headers;
-import com.maleshen.ssm.template.MsgManager;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import javafx.collections.FXCollections;
@@ -15,11 +15,11 @@ import javafx.collections.FXCollections;
 class ClientChanelHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, String msg){
+    public void channelRead0(ChannelHandlerContext ctx, String msg) {
         //Auth not complete
         if (!ClientConnector.authenticated) {
 
-            if (msg.startsWith(Headers.AUTH_REG_BAD)){
+            if (msg.startsWith(Headers.AUTH_REG_BAD)) {
                 ClientConnector.answered = true;
             }
             //Auth or registration complete
@@ -37,7 +37,7 @@ class ClientChanelHandler extends SimpleChannelInboundHandler<String> {
         // Chat logic.
         else {
             //First time we need to get contact list. So look for them
-            if (msg.startsWith(Headers.CONTACT_LIST)){
+            if (msg.startsWith(Headers.CONTACT_LIST)) {
 
                 msg = MsgManager.getMsgData(Headers.CONTACT_LIST, msg);
                 //Init
@@ -46,12 +46,12 @@ class ClientChanelHandler extends SimpleChannelInboundHandler<String> {
                 ClientApp.contactList.addAll(ArrayListExt.getFromString(msg));
             }
             //Simple message for me
-            else if (msg.startsWith(Headers.MSG)){
+            else if (msg.startsWith(Headers.MSG)) {
                 msg = MsgManager.getMsgData(Headers.MSG, msg);
                 MainSceneController.getMessage(Message.getFromString(msg));
             }
             // Look for message with search users results
-            else if (msg.startsWith(Headers.FOUND_USERS)){
+            else if (msg.startsWith(Headers.FOUND_USERS)) {
                 ClientConnector.searchCompleted = true;
 
                 msg = MsgManager.getMsgData(Headers.FOUND_USERS, msg);

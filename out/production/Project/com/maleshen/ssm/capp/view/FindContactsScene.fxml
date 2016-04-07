@@ -2,10 +2,9 @@
 
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
-<?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" stylesheets="@style/FindContactsScene.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maleshen.ssm.capp.view.FindAddContactsController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" stylesheets="@../../../../../resources/client/style/FindContactsScene.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maleshen.ssm.capp.view.FindAddContactsController">
    <children>
       <Button layoutX="504.0" layoutY="83.0" mnemonicParsing="false" onAction="#search" prefHeight="25.0" prefWidth="83.0" text="Search" />
       <Label alignment="CENTER" contentDisplay="CENTER" layoutX="23.0" layoutY="25.0" prefHeight="29.0" prefWidth="548.0" styleClass="labelFound" text="Put keywords for search contacts:" />

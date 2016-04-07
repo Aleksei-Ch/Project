@@ -15,7 +15,7 @@ import java.util.Date;
 
 public class DBWorker {
 
-    private static DBConnector DBConnector = new DBConnectorImpl();
+    private static DBConnector DBConnector = new DBConnectorProp();
     private static ResultSet resultSet;
 
     public static boolean putMessage(Message m) throws SQLException, ClassNotFoundException {
@@ -38,7 +38,7 @@ public class DBWorker {
 
         resultSet = preparedStatement.executeQuery();
 
-        while (resultSet.next()){
+        while (resultSet.next()) {
             String from = resultSet.getString("fromUserID");
             String time = resultSet.getString("time");
             String msg = resultSet.getString("msg");
@@ -65,7 +65,7 @@ public class DBWorker {
 
         ArrayListExt<User> contacts = new ArrayListExt<>();
 
-        while (resultSet.next()){
+        while (resultSet.next()) {
             contacts.add(getUserFromResultSet(resultSet));
         }
 
@@ -80,7 +80,7 @@ public class DBWorker {
 
         resultSet = preparedStatement.executeQuery();
 
-        if (resultSet.next()){
+        if (resultSet.next()) {
             Integer newId = resultSet.getInt("id");
             String newLogin = resultSet.getString("login");
             String newPass = resultSet.getString("hash_pass");
@@ -101,7 +101,7 @@ public class DBWorker {
 
         resultSet = preparedStatement.executeQuery();
 
-        if (resultSet.next()){
+        if (resultSet.next()) {
             String newLogin = resultSet.getString("login");
             String newPass = resultSet.getString("hash_pass");
             String name = resultSet.getString("name") != null ? resultSet.getString("name") : "Noname";
@@ -113,10 +113,12 @@ public class DBWorker {
         return null;
     }
 
-    /** User registration
-    *   @param user User formed on registration form
-    *   @return null if user not added to database
-    *           user with userID if added.
+    /**
+     * User registration
+     *
+     * @param user User formed on registration form
+     * @return null if user not added to database
+     * user with userID if added.
      */
     public static User registerUser(User user) throws ClassNotFoundException, SQLException {
 
@@ -137,7 +139,7 @@ public class DBWorker {
         ArrayListExt<User> resuilts = new ArrayListExt<>();
 
         for (String keyword : keywords.split(" ")) {
-            keyword = "%"+keyword+"%";
+            keyword = "%" + keyword + "%";
             PreparedStatement preparedStatement = (PreparedStatement) DBConnector.getConnection()
                     .prepareStatement(SQLQueries.FOUND_USERS);
             preparedStatement.setString(1, keyword);

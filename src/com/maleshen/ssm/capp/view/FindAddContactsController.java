@@ -15,6 +15,9 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 
 public class FindAddContactsController extends DefaultSceneController {
+    private static ObservableList<User> resultSet;
+    private static boolean founded = true;
+    private static boolean error = false;
     @FXML
     private TextField keywords;
     @FXML
@@ -32,9 +35,14 @@ public class FindAddContactsController extends DefaultSceneController {
     @FXML
     private Label success;
 
-    private static ObservableList<User> resultSet;
-    private static boolean founded = true;
-    private static boolean error = false;
+    public static void getResult(ArrayListExt<User> results) {
+        if (results != null && results.size() > 0) {
+            founded = true;
+            resultSet.addAll(results);
+        } else {
+            founded = false;
+        }
+    }
 
     @FXML
     @Override
@@ -85,7 +93,7 @@ public class FindAddContactsController extends DefaultSceneController {
         }
     }
 
-    private void error(){
+    private void error() {
         keywords.setText("");
         results.setVisible(false);
         notFound.setVisible(true);
@@ -95,7 +103,7 @@ public class FindAddContactsController extends DefaultSceneController {
 
     private void addContact(User user) {
         if (user.getLogin().equals(ClientApp.currentUser.getLogin()) ||
-                MainSceneController.dialogs.containsKey(user.getLogin())){
+                MainSceneController.dialogs.containsKey(user.getLogin())) {
             error();
             return;
         }
@@ -103,15 +111,6 @@ public class FindAddContactsController extends DefaultSceneController {
                 Flags.USER_SPLITTER + user.getId());
         success.setVisible(true);
         ClientConnector.renewData();
-    }
-
-    public static void getResult(ArrayListExt<User> results) {
-        if (results != null && results.size() > 0) {
-            founded = true;
-            resultSet.addAll(results);
-        } else {
-            founded = false;
-        }
     }
 
     private class Renewer implements Runnable {

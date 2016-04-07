@@ -6,9 +6,9 @@ import com.maleshen.ssm.entity.Message;
 import com.maleshen.ssm.entity.User;
 import com.maleshen.ssm.sapp.model.logic.AuthenticationImpl;
 import com.maleshen.ssm.sapp.model.logic.DBWorker;
+import com.maleshen.ssm.sapp.model.security.MsgManager;
 import com.maleshen.ssm.template.Flags;
 import com.maleshen.ssm.template.Headers;
-import com.maleshen.ssm.template.MsgManager;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -24,7 +24,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ServerChannelsHandler extends SimpleChannelInboundHandler<String>{
+public class ServerChannelsHandler extends SimpleChannelInboundHandler<String> {
 
     //All connections
     public static volatile ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
@@ -66,7 +66,7 @@ public class ServerChannelsHandler extends SimpleChannelInboundHandler<String>{
         }
 
         //If message is not authinfo - it must be registration info.
-        if (message.startsWith(Headers.REG)){
+        if (message.startsWith(Headers.REG)) {
 
             message = MsgManager.getMsgData(Headers.REG, message);
 
@@ -109,7 +109,7 @@ public class ServerChannelsHandler extends SimpleChannelInboundHandler<String>{
                 if (u.getLogin().equals(messageEntity.getToUser())) {
                     for (Channel c : users.keySet()) {
                         if (users.get(c).getLogin().equals(u.getLogin())) {
-                            if (!c.isActive()){
+                            if (!c.isActive()) {
                                 users.remove(c);
                                 break;
                             }
@@ -121,7 +121,7 @@ public class ServerChannelsHandler extends SimpleChannelInboundHandler<String>{
                     break;
                 }
             }
-            if (later){
+            if (later) {
                 DBWorker.putMessage(messageEntity);
             }
         }
@@ -130,22 +130,22 @@ public class ServerChannelsHandler extends SimpleChannelInboundHandler<String>{
     private void deliverLost(Channel c, String login) throws SQLException, ClassNotFoundException {
         ObservableList<Message> messages = DBWorker.getMessagesForUser(login);
 
-        if (messages.size() > 0){
-            for (Message m : messages){
+        if (messages.size() > 0) {
+            for (Message m : messages) {
                 c.writeAndFlush(MsgManager.createMsg(Headers.MSG, m.toString()));
             }
         }
     }
 
     private void foundAndAnswer(Channel c, String message) throws SQLException, ClassNotFoundException {
-        if (c.isActive()){
+        if (c.isActive()) {
             message = MsgManager.getMsgData(Headers.FOUND_USERS, message);
 
             StringBuilder keywords = new StringBuilder();
             keywords.append(message.split(Flags.FOUND_SPLITTER)[0]);
 
-            if (message.split(Flags.FOUND_SPLITTER).length > 1){
-                for (int i = 1; i < message.split(Flags.FOUND_SPLITTER).length; i++){
+            if (message.split(Flags.FOUND_SPLITTER).length > 1) {
+                for (int i = 1; i < message.split(Flags.FOUND_SPLITTER).length; i++) {
                     keywords.append(message.split(Flags.FOUND_SPLITTER)[i]);
                 }
             }
@@ -155,7 +155,7 @@ public class ServerChannelsHandler extends SimpleChannelInboundHandler<String>{
         }
     }
 
-    private void setContacts(String message){
+    private void setContacts(String message) {
         if (message.startsWith(Headers.ADD_CONTACT)) {
             try {
                 message = MsgManager.getMsgData(Headers.ADD_CONTACT, message);
@@ -168,7 +168,7 @@ public class ServerChannelsHandler extends SimpleChannelInboundHandler<String>{
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (message.startsWith(Headers.REM_CONTACT)){
+        } else if (message.startsWith(Headers.REM_CONTACT)) {
             try {
                 message = MsgManager.getMsgData(Headers.REM_CONTACT, message);
 
@@ -199,26 +199,18 @@ public class ServerChannelsHandler extends SimpleChannelInboundHandler<String>{
             authOrReg(ctx.channel(), msg);
         } else
 
-        //Look for request List contacts
-        if (msg.startsWith(Headers.CONTACT_LIST)) {
-            sendContacts(ctx.channel());
-        } else
-
-        if (msg.startsWith(Headers.MSG)) {
-            redirectUnicastMsg(msg);
-        } else
-
-        if (msg.startsWith(Headers.FOUND_USERS)){
-            foundAndAnswer(ctx.channel(), msg);
-        } else
-
-        if (msg.startsWith(Headers.ADD_CONTACT) || msg.startsWith(Headers.REM_CONTACT)){
-            setContacts(msg);
-        } else
-
-        if (msg.startsWith(Headers.UPDATE_ME)){
-            updateUser(ctx.channel(), msg);
-        }
+            //Look for request List contacts
+            if (msg.startsWith(Headers.CONTACT_LIST)) {
+                sendContacts(ctx.channel());
+            } else if (msg.startsWith(Headers.MSG)) {
+                redirectUnicastMsg(msg);
+            } else if (msg.startsWith(Headers.FOUND_USERS)) {
+                foundAndAnswer(ctx.channel(), msg);
+            } else if (msg.startsWith(Headers.ADD_CONTACT) || msg.startsWith(Headers.REM_CONTACT)) {
+                setContacts(msg);
+            } else if (msg.startsWith(Headers.UPDATE_ME)) {
+                updateUser(ctx.channel(), msg);
+            }
     }
 
     @Override

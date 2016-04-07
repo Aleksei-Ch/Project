@@ -17,12 +17,12 @@ import java.time.ZoneId;
 import java.util.Date;
 
 public class InfoSceneController extends DefaultSceneController {
+    public static User user;
     //Panes
     @FXML
     private AnchorPane my;
     @FXML
     private AnchorPane otherUser;
-
     //My profile
     @FXML
     private Label login;
@@ -40,7 +40,6 @@ public class InfoSceneController extends DefaultSceneController {
     private PasswordField retypePass;
     @FXML
     private Label infoString;
-
     //User profile
     @FXML
     private Label userLogin;
@@ -53,16 +52,15 @@ public class InfoSceneController extends DefaultSceneController {
     @FXML
     private Label userBitrhdate;
 
-    public static User user;
-
     @Override
+    @FXML
     protected void initialize() {
         infoString.setText("");
         fill();
     }
 
-    private void fill(){
-        if (user.getLogin().equals(ClientApp.currentUser.getLogin())){
+    private void fill() {
+        if (user.getLogin().equals(ClientApp.currentUser.getLogin())) {
             my.setVisible(true);
             otherUser.setVisible(false);
             showMyInfo();
@@ -73,14 +71,14 @@ public class InfoSceneController extends DefaultSceneController {
         }
     }
 
-    private void showMyInfo(){
+    private void showMyInfo() {
         login.setText(user.getLogin());
         name.setText(user.getName());
         lastname.setText(user.getLastName());
         bitrhdate.getEditor().setText(user.getBirthDateString());
     }
 
-    private void showUserInfo(){
+    private void showUserInfo() {
         userLogin.setText(user.getLogin());
         userName.setText(user.getName());
         userLastname.setText(user.getLastName());
@@ -88,12 +86,12 @@ public class InfoSceneController extends DefaultSceneController {
     }
 
     @FXML
-    private void close(){
+    private void close() {
         ((Stage) my.getScene().getWindow()).close();
     }
 
     @FXML
-    private void update(){
+    private void update() {
         if (checkFields()) {
             infoString.setText("");
             Date bd = Date.from(LocalDateTime.from(
@@ -113,11 +111,11 @@ public class InfoSceneController extends DefaultSceneController {
         }
     }
 
-    private boolean checkFields(){
+    private boolean checkFields() {
         return pass.getText().equals(retypePass.getText());
     }
 
-    private void localUpdate(User user){
+    private void localUpdate(User user) {
         ClientApp.currentUser.setName(user.getName());
         ClientApp.currentUser.setLastName(user.getLastName());
         ClientApp.currentUser.setBirthDate(user.getBirthDate());

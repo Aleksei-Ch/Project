@@ -1,9 +1,9 @@
 package com.maleshen.ssm.capp.model;
 
+import com.maleshen.ssm.capp.model.security.MsgManager;
 import com.maleshen.ssm.entity.AuthInfo;
 import com.maleshen.ssm.entity.User;
 import com.maleshen.ssm.template.Headers;
-import com.maleshen.ssm.template.MsgManager;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -28,20 +28,21 @@ public class ClientConnector {
     private static Bootstrap b;
     private static EventLoopGroup group;
 
-    public ClientConnector() throws SSLException { }
+    public ClientConnector() throws SSLException {
+    }
 
-    private static void init(){
+    private static void init() {
         ch = null;
         b = new Bootstrap();
         group = new NioEventLoopGroup();
     }
 
-    public static void close(){
+    public static void close() {
         group.shutdownGracefully();
         ch.disconnect();
     }
 
-    private static boolean authenticate(AuthInfo authInfo, Channel ch) throws InterruptedException {
+    private static boolean authentication(AuthInfo authInfo, Channel ch) throws InterruptedException {
 
         answered = false;
         ch.writeAndFlush(MsgManager.createMsg(Headers.AUTH, authInfo.toString()));
@@ -56,7 +57,7 @@ public class ClientConnector {
         return authenticated;
     }
 
-    private static boolean registrate(User user, Channel ch) throws InterruptedException {
+    private static boolean registration(User user, Channel ch) throws InterruptedException {
 
         answered = false;
         ch.writeAndFlush(MsgManager.createMsg(Headers.REG, user.getRegInfo()));
@@ -71,14 +72,15 @@ public class ClientConnector {
         return registered;
     }
 
-    /** Try to establishing connection with server and try auth user
-    *
-    *   @param authInfo Authentication info
-    *   @param host inet address of server
-    *   @param port server port
-    *   @return  value 0 if auth complete,
-    *                   1 if auth failed,
-    *                   2 if connection not established
+    /**
+     * Try to establishing connection with server and try auth user
+     *
+     * @param authInfo Authentication info
+     * @param host     inet address of server
+     * @param port     server port
+     * @return value 0 if auth complete,
+     * 1 if auth failed,
+     * 2 if connection not established
      */
     public static int establishingConnection(AuthInfo authInfo, String host, int port) throws Exception {
 
@@ -96,62 +98,26 @@ public class ClientConnector {
 
             ch = b.connect(HOST, PORT).sync().channel();
 
-            if (authenticate(authInfo, ch)) {
+            if (authentication(authInfo, ch)) {
                 return 0;
             } else {
                 group.shutdownGracefully();
                 return 1;
             }
-//            //Some chat
-//            for (; ; ) {
-//
-//                String line = in.readLine();
-//                if (line == null) {
-//                    break;
-//                }
-//                //Unicast msg:
-//                //You need type p and login of needed user first.
-//                //Example: p logen How are you?
-//                //Multicast msg:
-//                //Just put your message with m letter first.
-//                char[] msg = line.toCharArray();
-//                StringBuilder message = new StringBuilder();
-//                if (msg.length>1){
-//                    for (int i = 2; i < msg.length; i++) {
-//                        message.append(msg[i]);
-//                    }
-//                }
-//                if (msg[0] == 'm'){
-//                    lastWriteFuture = ch.writeAndFlush(Flags.MULTICAST_MSG+" " + message.toString() + "\n");
-//                } else if (msg[0] == 'p') {
-//                    lastWriteFuture = ch.writeAndFlush(Flags.UNICAST_MSG + " " + message.toString() + "\n");
-//                }
-//                // If user typed the 'bye' command, wait until the server closes
-//                // the connection.
-//                if ("bye".equals(line.toLowerCase())) {
-//                    ch.closeFuture().sync();
-//                    break;
-//                }
-//
-//            }
-//
-//            // Wait until all messages are flushed before closing the channel.
-//            if (lastWriteFuture != null) {
-//                lastWriteFuture.sync();
-//            }
         } catch (Exception e) {
             return 2;
         }
     }
 
-    /** Try to establishing connection with server and try registrate user
+    /**
+     * Try to establishing connection with server and try registration user
      *
-     *   @param user User reg info
-     *   @param host inet address of server
-     *   @param port server port
-     *   @return  value 0 if registration complete,
-     *                   1 if registration failed,
-     *                   2 if connection not established
+     * @param user User reg info
+     * @param host inet address of server
+     * @param port server port
+     * @return value 0 if registration complete,
+     * 1 if registration failed,
+     * 2 if connection not established
      */
     public static int establishingConnection(User user, String host, int port) throws Exception {
 
@@ -169,7 +135,7 @@ public class ClientConnector {
 
             ch = b.connect(HOST, PORT).sync().channel();
 
-            if (registrate(user, ch)){
+            if (registration(user, ch)) {
                 return 0;
             } else {
                 group.shutdownGracefully();
@@ -181,18 +147,20 @@ public class ClientConnector {
     }
 
     // Autorenew contact list and other shit.
-    public static void renewData(){
+    public static void renewData() {
         //Contact list request
         ch.writeAndFlush(MsgManager.createMsg(Headers.CONTACT_LIST));
     }
 
-    public static void sendMessage(String message){
+    public static void sendMessage(String message) {
         ch.writeAndFlush(MsgManager.createMsg(Headers.MSG, message));
     }
 
-    /** This method formed and write message for server
-     *  with keywords for search and receiver login
-     *  and wait for server answer
+    /**
+     * This method formed and write message for server
+     * with keywords for search and receiver login
+     * and wait for server answer
+     *
      * @param keywords keywords for search in database
      */
     public static void sendFoundRequest(String keywords) throws InterruptedException {
@@ -211,15 +179,15 @@ public class ClientConnector {
     /**
      * @param info : string contains ID both users
      */
-    public static void sendContactsReq(String info){
+    public static void sendContactsReq(String info) {
         ch.writeAndFlush(MsgManager.createMsg(Headers.ADD_CONTACT, info));
     }
 
-    public static void sendContactRemReq(String info){
+    public static void sendContactRemReq(String info) {
         ch.writeAndFlush(MsgManager.createMsg(Headers.REM_CONTACT, info));
     }
 
-    public static void updateMe(User user){
+    public static void updateMe(User user) {
         ch.writeAndFlush(MsgManager.createMsg(Headers.UPDATE_ME, user.getUpdateInfo()));
     }
 

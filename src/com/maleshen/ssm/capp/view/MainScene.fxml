@@ -1,166 +1,211 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.effect.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.effect.InnerShadow?>
-<?import javafx.scene.image.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-
-<AnchorPane maxHeight="500.0" maxWidth="700.0" minHeight="500.0" minWidth="700.0" prefHeight="500.0" prefWidth="700.0" snapToPixel="false" styleClass="background" stylesheets="@style/MainScene.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maleshen.ssm.capp.view.MainSceneController">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="500.0" maxWidth="700.0" minHeight="500.0" minWidth="700.0" prefHeight="500.0"
+            prefWidth="700.0" snapToPixel="false"
+            styleClass="background" stylesheets="@../../../../../resources/client/style/MainScene.css"
+            xmlns="http://javafx.com/javafx/8" fx:controller="com.maleshen.ssm.capp.view.MainSceneController">
     <children>
-      <TableView fx:id="contacts" layoutY="73.0" prefHeight="390.0" prefWidth="200.0">
-        <columns>
-          <TableColumn fx:id="contactName" editable="false" maxWidth="190.0" minWidth="177.0" prefWidth="182.0" resizable="false" text="C1" />
-        </columns>
-      </TableView>
-        <AnchorPane prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #DDDDDD;" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <TableView fx:id="contacts" layoutY="73.0" prefHeight="390.0" prefWidth="200.0">
+            <columns>
+                <TableColumn fx:id="contactName" editable="false" maxWidth="190.0" minWidth="177.0" prefWidth="182.0"
+                             resizable="false" text="C1"/>
+            </columns>
+        </TableView>
+        <AnchorPane prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #DDDDDD;"
+                    AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <Pane blendMode="SRC_ATOP" layoutX="14.0" layoutY="20.0" prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: #000; -fx-background-radius: 100;">
-               <children>
-                        <ImageView fx:id="avatar" blendMode="SRC_ATOP" depthTest="ENABLE" fitHeight="60.0" fitWidth="60.0" onMouseClicked="#initialize" preserveRatio="true" />
-               </children>
+                <Pane blendMode="SRC_ATOP" layoutX="14.0" layoutY="20.0" prefHeight="60.0" prefWidth="60.0"
+                      style="-fx-background-color: #000; -fx-background-radius: 100;">
+                    <children>
+                        <ImageView fx:id="avatar" blendMode="SRC_ATOP" depthTest="ENABLE" fitHeight="60.0"
+                                   fitWidth="60.0" onMouseClicked="#initialize" preserveRatio="true"/>
+                    </children>
                 </Pane>
                 <Label fx:id="name" layoutX="80.0" layoutY="19.0" prefHeight="20.0" prefWidth="100.0" text="Name">
                     <font>
-                        <Font name="Tahoma" size="12.0" />
+                        <Font name="Tahoma" size="12.0"/>
                     </font>
                 </Label>
-                <Label fx:id="login" alignment="TOP_LEFT" layoutX="80.0" layoutY="64.0" prefHeight="15.0" prefWidth="100.0" text="login">
+                <Label fx:id="login" alignment="TOP_LEFT" layoutX="80.0" layoutY="64.0" prefHeight="15.0"
+                       prefWidth="100.0" text="login">
                     <font>
-                        <Font name="Tahoma Bold" size="14.0" />
+                        <Font name="Tahoma Bold" size="14.0"/>
                     </font>
                 </Label>
-                <Label fx:id="lastName" layoutX="80.0" layoutY="41.0" prefHeight="20.0" prefWidth="100.0" text="Lastname">
+                <Label fx:id="lastName" layoutX="80.0" layoutY="41.0" prefHeight="20.0" prefWidth="100.0"
+                       text="Lastname">
                     <font>
-                        <Font name="Tahoma" size="12.0" />
+                        <Font name="Tahoma" size="12.0"/>
                     </font>
                 </Label>
             </children>
         </AnchorPane>
-        <AnchorPane layoutY="470.0" prefHeight="36.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+        <AnchorPane layoutY="470.0" prefHeight="36.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;"
+                    AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
             <children>
-                <GridPane alignment="CENTER" layoutY="1.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: #FFF; -fx-border-color: #CCC;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                <GridPane alignment="CENTER" layoutY="1.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="36.0"
+                          prefWidth="200.0" style="-fx-background-color: #FFF; -fx-border-color: #CCC;"
+                          AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                     <columnConstraints>
-                        <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0"
+                                           prefWidth="100.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0"/>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0"/>
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
                     </rowConstraints>
                     <children>
-                  <Button fx:id="add" alignment="CENTER" mnemonicParsing="false" onAction="#findAddContact" styleClass="menuButton" textAlignment="CENTER">
-                     <GridPane.margin>
-                        <Insets />
-                     </GridPane.margin>
-                  </Button>
-                  <Button fx:id="info" mnemonicParsing="false" onAction="#info" styleClass="menuButton" GridPane.columnIndex="1">
-                     <GridPane.margin>
-                        <Insets />
-                     </GridPane.margin>
-                  </Button>
-                  <Button fx:id="exit" mnemonicParsing="false" onAction="#logout" styleClass="menuButton" GridPane.columnIndex="3">
-                     <GridPane.margin>
-                        <Insets />
-                     </GridPane.margin>
-                  </Button>
-                  <Button fx:id="settings" mnemonicParsing="false" styleClass="menuButton" GridPane.columnIndex="2">
-                     <GridPane.margin>
-                        <Insets />
-                     </GridPane.margin>
-                  </Button>
+                        <Button fx:id="add" alignment="CENTER" mnemonicParsing="false" onAction="#findAddContact"
+                                styleClass="menuButton" textAlignment="CENTER">
+                            <GridPane.margin>
+                                <Insets/>
+                            </GridPane.margin>
+                        </Button>
+                        <Button fx:id="info" mnemonicParsing="false" onAction="#info" styleClass="menuButton"
+                                GridPane.columnIndex="1">
+                            <GridPane.margin>
+                                <Insets/>
+                            </GridPane.margin>
+                        </Button>
+                        <Button fx:id="exit" mnemonicParsing="false" onAction="#logout" styleClass="menuButton"
+                                GridPane.columnIndex="3">
+                            <GridPane.margin>
+                                <Insets/>
+                            </GridPane.margin>
+                        </Button>
+                        <Button fx:id="settings" mnemonicParsing="false" styleClass="menuButton"
+                                GridPane.columnIndex="2">
+                            <GridPane.margin>
+                                <Insets/>
+                            </GridPane.margin>
+                        </Button>
                     </children>
                 </GridPane>
             </children>
         </AnchorPane>
-        <AnchorPane fx:id="welcomeMsg" layoutX="200.0" prefHeight="500.0" prefWidth="500.0" style="-fx-background-color: #FFF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <AnchorPane fx:id="welcomeMsg" layoutX="200.0" prefHeight="500.0" prefWidth="500.0"
+                    style="-fx-background-color: #FFF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0"
+                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <TextField alignment="CENTER" editable="false" focusTraversable="false" layoutX="57.0" layoutY="77.0" prefHeight="44.0" prefWidth="407.0" style="-fx-background-color: #FFF;" text="Welcome to Simple Safety Messenger." AnchorPane.leftAnchor="57.0" AnchorPane.rightAnchor="36.0">
+                <TextField alignment="CENTER" editable="false" focusTraversable="false" layoutX="57.0" layoutY="77.0"
+                           prefHeight="44.0" prefWidth="407.0" style="-fx-background-color: #FFF;"
+                           text="Welcome to Simple Safety Messenger." AnchorPane.leftAnchor="57.0"
+                           AnchorPane.rightAnchor="36.0">
                     <font>
-                        <Font name="Tahoma Bold" size="20.0" />
+                        <Font name="Tahoma Bold" size="20.0"/>
                     </font>
                 </TextField>
-                <TextField alignment="BOTTOM_RIGHT" editable="false" focusTraversable="false" layoutX="353.0" layoutY="469.0" prefHeight="20.0" prefWidth="133.0" style="-fx-background-color: #FFF;" text="© Chubanov A.A., 2016" AnchorPane.bottomAnchor="11.0" AnchorPane.rightAnchor="14.0">
+                <TextField alignment="BOTTOM_RIGHT" editable="false" focusTraversable="false" layoutX="353.0"
+                           layoutY="469.0" prefHeight="20.0" prefWidth="133.0" style="-fx-background-color: #FFF;"
+                           text="© Chubanov A.A., 2016" AnchorPane.bottomAnchor="11.0" AnchorPane.rightAnchor="14.0">
                     <font>
-                        <Font name="Tahoma Bold" size="10.0" />
+                        <Font name="Tahoma Bold" size="10.0"/>
                     </font>
                 </TextField>
-                <Label alignment="CENTER" layoutX="95.0" layoutY="168.0" prefHeight="30.0" prefWidth="332.0" text="Add your first contact by pressing the button " AnchorPane.leftAnchor="95.0" AnchorPane.rightAnchor="73.0">
+                <Label alignment="CENTER" layoutX="95.0" layoutY="168.0" prefHeight="30.0" prefWidth="332.0"
+                       text="Add your first contact by pressing the button " AnchorPane.leftAnchor="95.0"
+                       AnchorPane.rightAnchor="73.0">
                     <font>
-                        <Font name="Tahoma" size="14.0" />
+                        <Font name="Tahoma" size="14.0"/>
                     </font>
                 </Label>
-                <Label alignment="CENTER" layoutX="95.0" layoutY="191.0" prefHeight="27.0" prefWidth="323.0" text="on the bottom left, or select an existing " AnchorPane.leftAnchor="95.0" AnchorPane.rightAnchor="73.0">
+                <Label alignment="CENTER" layoutX="95.0" layoutY="191.0" prefHeight="27.0" prefWidth="323.0"
+                       text="on the bottom left, or select an existing " AnchorPane.leftAnchor="95.0"
+                       AnchorPane.rightAnchor="73.0">
                     <font>
-                        <Font name="Tahoma" size="14.0" />
+                        <Font name="Tahoma" size="14.0"/>
                     </font>
                 </Label>
-                <Label alignment="CENTER" layoutX="95.0" layoutY="319.0" prefHeight="27.0" prefWidth="107.0" text="  Have a nice day!" AnchorPane.leftAnchor="95.0" AnchorPane.rightAnchor="73.0">
+                <Label alignment="CENTER" layoutX="95.0" layoutY="319.0" prefHeight="27.0" prefWidth="107.0"
+                       text="  Have a nice day!" AnchorPane.leftAnchor="95.0" AnchorPane.rightAnchor="73.0">
                     <font>
-                        <Font name="Tahoma" size="14.0" />
+                        <Font name="Tahoma" size="14.0"/>
                     </font>
                 </Label>
-                <Label alignment="CENTER" layoutX="95.0" layoutY="213.0" prefHeight="27.0" prefWidth="323.0" text="and start using program." AnchorPane.leftAnchor="95.0" AnchorPane.rightAnchor="73.0">
+                <Label alignment="CENTER" layoutX="95.0" layoutY="213.0" prefHeight="27.0" prefWidth="323.0"
+                       text="and start using program." AnchorPane.leftAnchor="95.0" AnchorPane.rightAnchor="73.0">
                     <font>
-                        <Font name="Tahoma" size="14.0" />
+                        <Font name="Tahoma" size="14.0"/>
                     </font>
                 </Label>
             </children>
         </AnchorPane>
-        <AnchorPane fx:id="dialogPane" layoutX="200.0" minHeight="500.0" prefHeight="500.0" prefWidth="500.0" style="-fx-background-color: #FFF;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <AnchorPane fx:id="dialogPane" layoutX="200.0" minHeight="500.0" prefHeight="500.0" prefWidth="500.0"
+                    style="-fx-background-color: #FFF;" visible="false" AnchorPane.bottomAnchor="0.0"
+                    AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
-                <TableView fx:id="chatTable" focusTraversable="false" layoutY="49.0" pickOnBounds="false" prefHeight="370.0" prefWidth="500.0" AnchorPane.bottomAnchor="81.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="49.0">
+                <TableView fx:id="chatTable" focusTraversable="false" layoutY="49.0" pickOnBounds="false"
+                           prefHeight="370.0" prefWidth="500.0" AnchorPane.bottomAnchor="81.0"
+                           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="49.0">
                     <columns>
-                        <TableColumn fx:id="author" editable="false" maxWidth="75.0" minWidth="75.0" prefWidth="75.0" resizable="false" sortable="false" />
-                        <TableColumn fx:id="message" editable="false" maxWidth="340.0" minWidth="320.0" prefWidth="340.0" sortable="false" />
-                        <TableColumn fx:id="msgTime" editable="false" maxWidth="80.0" minWidth="0.0" prefWidth="60.0" resizable="false" sortable="false" />
+                        <TableColumn fx:id="author" editable="false" maxWidth="75.0" minWidth="75.0" prefWidth="75.0"
+                                     resizable="false" sortable="false"/>
+                        <TableColumn fx:id="message" editable="false" maxWidth="340.0" minWidth="320.0"
+                                     prefWidth="340.0" sortable="false"/>
+                        <TableColumn fx:id="msgTime" editable="false" maxWidth="80.0" minWidth="0.0" prefWidth="60.0"
+                                     resizable="false" sortable="false"/>
                     </columns>
                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                     </columnResizePolicy>
                 </TableView>
-                <AnchorPane prefHeight="60.0" prefWidth="500.0" style="-fx-background-color: #FFF;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <AnchorPane prefHeight="60.0" prefWidth="500.0" style="-fx-background-color: #FFF;"
+                            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                     <children>
-                        <Separator focusTraversable="false" layoutX="14.0" layoutY="71.0" prefHeight="0.0" prefWidth="470.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="16.0">
+                        <Separator focusTraversable="false" layoutX="14.0" layoutY="71.0" prefHeight="0.0"
+                                   prefWidth="470.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="16.0">
                             <effect>
-                                <DropShadow />
+                                <DropShadow/>
                             </effect>
                             <opaqueInsets>
-                                <Insets right="1.0" />
+                                <Insets right="1.0"/>
                             </opaqueInsets>
                         </Separator>
-                        <Pane blendMode="SRC_ATOP" layoutX="422.0" layoutY="11.0" prefHeight="50.0" prefWidth="50.0" style="-fx-background-color: #000; -fx-background-radius: 100;" AnchorPane.rightAnchor="28.0">
+                        <Pane blendMode="SRC_ATOP" layoutX="422.0" layoutY="11.0" prefHeight="50.0" prefWidth="50.0"
+                              style="-fx-background-color: #000; -fx-background-radius: 100;"
+                              AnchorPane.rightAnchor="28.0">
                             <children>
-                                <ImageView fx:id="contactAvatar" blendMode="SRC_ATOP" depthTest="ENABLE" fitHeight="50.0" fitWidth="50.0" preserveRatio="true">
+                                <ImageView fx:id="contactAvatar" blendMode="SRC_ATOP" depthTest="ENABLE"
+                                           fitHeight="50.0" fitWidth="50.0" preserveRatio="true">
                                     <image>
-                                        <Image url="@noav.png" />
+                                        <Image url="@../../../../../resources/client/img/noav.png"/>
                                     </image>
                                 </ImageView>
                             </children>
                         </Pane>
-                        <Label fx:id="nameLastnameContact" alignment="TOP_RIGHT" layoutX="214.0" layoutY="14.0" prefHeight="20.0" prefWidth="200.0" text="Name Lastname" AnchorPane.leftAnchor="214.0" AnchorPane.rightAnchor="86.0">
+                        <Label fx:id="nameLastnameContact" alignment="TOP_RIGHT" layoutX="214.0" layoutY="14.0"
+                               prefHeight="20.0" prefWidth="200.0" text="Name Lastname" AnchorPane.leftAnchor="214.0"
+                               AnchorPane.rightAnchor="86.0">
                             <font>
-                                <Font name="Tahoma" size="14.0" />
+                                <Font name="Tahoma" size="14.0"/>
                             </font>
                         </Label>
-                        <Label fx:id="loginContact" alignment="TOP_RIGHT" layoutX="314.0" layoutY="36.0" prefHeight="15.0" prefWidth="100.0" text="login" AnchorPane.leftAnchor="314.0" AnchorPane.rightAnchor="86.0">
+                        <Label fx:id="loginContact" alignment="TOP_RIGHT" layoutX="314.0" layoutY="36.0"
+                               prefHeight="15.0" prefWidth="100.0" text="login" AnchorPane.leftAnchor="314.0"
+                               AnchorPane.rightAnchor="86.0">
                             <font>
-                                <Font name="Tahoma Bold" size="14.0" />
+                                <Font name="Tahoma Bold" size="14.0"/>
                             </font>
                         </Label>
                     </children>
                 </AnchorPane>
-                <TextArea fx:id="msg" focusTraversable="false" layoutX="8.0" layoutY="426.0" pickOnBounds="false" prefHeight="60.0" prefWidth="420.0">
+                <TextArea fx:id="msg" focusTraversable="false" layoutX="8.0" layoutY="426.0" pickOnBounds="false"
+                          prefHeight="60.0" prefWidth="420.0">
                     <font>
-                        <Font name="Tahoma" size="12.0" />
+                        <Font name="Tahoma" size="12.0"/>
                     </font>
                 </TextArea>
-            <Button fx:id="send" layoutX="428.0" layoutY="426.0" mnemonicParsing="false" onAction="#sendMessage" prefHeight="60.0" prefWidth="62.0" />
+                <Button fx:id="send" layoutX="428.0" layoutY="426.0" mnemonicParsing="false" onAction="#sendMessage"
+                        prefHeight="60.0" prefWidth="62.0"/>
             </children>
         </AnchorPane>
     </children>

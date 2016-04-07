@@ -33,6 +33,9 @@ import java.util.Map;
 import static com.maleshen.ssm.capp.ClientApp.primaryStage;
 
 public class MainSceneController extends DefaultSceneController {
+    //Dialogs
+    static Map<String, ObservableList<Message>> dialogs = new HashMap();
+    static boolean findIsOpen = false;
     @FXML
     private ImageView avatar;
     @FXML
@@ -57,7 +60,6 @@ public class MainSceneController extends DefaultSceneController {
     private AnchorPane welcomeMsg;
     @FXML
     private AnchorPane dialogPane;
-
     //Dialog fields
     @FXML
     private Label nameLastnameContact;
@@ -77,14 +79,19 @@ public class MainSceneController extends DefaultSceneController {
     private TableColumn<Message, String> message;
     @FXML
     private TableColumn<Message, String> msgTime;
-
-    //Dialogs
-    static Map<String, ObservableList<Message>> dialogs = new HashMap();
     //Find contacts scene
     private Stage findAddContactsStage = new Stage();
     private Stage infoStage = new Stage();
-    static boolean findIsOpen = false;
 
+    public static void getMessage(Message message) {
+        if (dialogs.keySet().contains(message.getFromUser())) {
+            dialogs.get(message.getFromUser()).add(message);
+        } else {
+            //TODO. Contact request
+            dialogs.put(message.getFromUser(), FXCollections.observableArrayList());
+            dialogs.get(message.getFromUser()).add(message);
+        }
+    }
 
     @Override
     @FXML
@@ -111,26 +118,26 @@ public class MainSceneController extends DefaultSceneController {
 
         //Setting up buttons.
         add.setGraphic(new ImageView(
-                new Image(String.valueOf(getClass().getResource("img/add.png")))));
+                new Image(String.valueOf(getClass().getResource("/resources/client/img/add.png")))));
         setButtonEffect(add);
         info.setGraphic(new ImageView(
-                new Image(String.valueOf(getClass().getResource("img/info.png")))));
+                new Image(String.valueOf(getClass().getResource("/resources/client/img/info.png")))));
         setButtonEffect(info);
         settings.setGraphic(new ImageView(
-                new Image(String.valueOf(getClass().getResource("img/settings.png")))));
+                new Image(String.valueOf(getClass().getResource("/resources/client/img/settings.png")))));
         setButtonEffect(settings);
         exit.setGraphic(new ImageView(
-                new Image(String.valueOf(getClass().getResource("img/exit.png")))));
+                new Image(String.valueOf(getClass().getResource("/resources/client/img/exit.png")))));
         setButtonEffect(exit);
         send.setGraphic(new ImageView(
-                new Image(String.valueOf(getClass().getResource("img/send.png")))));
+                new Image(String.valueOf(getClass().getResource("/resources/client/img/send.png")))));
         setButtonEffect(send);
 
         //Fill user info
         fillUserInfo();
 
         //TODO. Avatars.
-        avatar.setImage(new Image(String.valueOf(getClass().getResource("img/noav.png"))));
+        avatar.setImage(new Image(String.valueOf(getClass().getResource("/resources/client/img/noav.png"))));
 
         //Put contacts into the table
         contactName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLogin()));
@@ -152,38 +159,39 @@ public class MainSceneController extends DefaultSceneController {
         new Renew();
     }
 
-    private void fillUserInfo(){
+    private void fillUserInfo() {
         name.setText(ClientApp.currentUser.getName());
         lastName.setText(ClientApp.currentUser.getLastName());
         login.setText(ClientApp.currentUser.getLogin());
     }
 
-    private void removeContact(User user){
+    private void removeContact(User user) {
         contacts.getItems().remove(user);
         dialogs.remove(user.getLogin());
         ClientConnector.sendContactRemReq(ClientApp.currentUser.getId() +
                 Flags.USER_SPLITTER + user.getId());
     }
 
-    /** This method must fill chat table
-     *  for current selected contact
+    /**
+     * This method must fill chat table
+     * for current selected contact
      *
      * @param contact login of selected contact
      */
-    private void fillChat(String contact){
+    private void fillChat(String contact) {
         chatTable.setItems(dialogs.get(contact));
 
         author.setCellValueFactory(cellData -> new SimpleStringProperty(
                 cellData.getValue().getFromUser().equals(ClientApp.currentUser.getLogin()) ?
-                "You: " : cellData.getValue().getFromUser()));
+                        "You: " : cellData.getValue().getFromUser()));
         message.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getMsg()));
         msgTime.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTime()));
     }
 
     @FXML
-    private void sendMessage(){
+    private void sendMessage() {
         if (contacts.getSelectionModel().getSelectedItem() != null &&
-                !msg.getText().equals("")){
+                !msg.getText().equals("")) {
 
             Message m = new Message(ClientApp.currentUser.getLogin(),
                     contacts.getSelectionModel().getSelectedItem().getLogin(),
@@ -196,34 +204,26 @@ public class MainSceneController extends DefaultSceneController {
         }
     }
 
-    public static void getMessage(Message message){
-        if (dialogs.keySet().contains(message.getFromUser())){
-            dialogs.get(message.getFromUser()).add(message);
-        } else {
-            //TODO. Contact request
-            dialogs.put(message.getFromUser(), FXCollections.observableArrayList());
-            dialogs.get(message.getFromUser()).add(message);
-        }
-    }
-
-    private void setButtonEffect(Button b){
+    private void setButtonEffect(Button b) {
         //Adding the shadow when the mouse cursor is on
         b.addEventHandler(MouseEvent.MOUSE_ENTERED,
                 new EventHandler<MouseEvent>() {
-                    @Override public void handle(MouseEvent e) {
+                    @Override
+                    public void handle(MouseEvent e) {
                         b.setEffect(new DropShadow());
                     }
                 });
         //Removing the shadow when the mouse cursor is off
         b.addEventHandler(MouseEvent.MOUSE_EXITED,
                 new EventHandler<MouseEvent>() {
-                    @Override public void handle(MouseEvent e) {
+                    @Override
+                    public void handle(MouseEvent e) {
                         b.setEffect(null);
                     }
                 });
     }
 
-    private void openDialogPane(User contact){
+    private void openDialogPane(User contact) {
         if (contact != null) {
             welcomeMsg.setVisible(false);
             dialogPane.setVisible(true);
@@ -231,7 +231,7 @@ public class MainSceneController extends DefaultSceneController {
             nameLastnameContact.setText(contact.getName() + " " + contact.getLastName());
             loginContact.setText(contact.getLogin());
             //TODO. Avatars
-            contactAvatar.setImage(new Image(String.valueOf(getClass().getResource("img/noav.png"))));
+            contactAvatar.setImage(new Image(String.valueOf(getClass().getResource("/resources/client/img/noav.png"))));
 
             //Open ChatTable
             fillChat(contacts.getSelectionModel().getSelectedItem().getLogin());
@@ -277,11 +277,11 @@ public class MainSceneController extends DefaultSceneController {
     }
 
     @FXML
-    private void info(){
+    private void info() {
         openUserInfo(ClientApp.currentUser);
     }
 
-    private void openUserInfo(User user){
+    private void openUserInfo(User user) {
         InfoSceneController.user = user;
 
         FXMLLoader loader = new FXMLLoader();
@@ -300,21 +300,22 @@ public class MainSceneController extends DefaultSceneController {
         infoStage.show();
     }
 
-    /** Inner class for daemon thread
-     *  needed for autorenew some data
-     *  every time.
+    /**
+     * Inner class for daemon thread
+     * needed for autorenew some data
+     * every time.
      */
-    private class Renew implements Runnable{
+    private class Renew implements Runnable {
 
         private Thread thread;
 
-        Renew(){
+        Renew() {
             thread = new Thread(this);
             thread.setDaemon(true);
             thread.start();
         }
 
-        private void wait(int msec){
+        private void wait(int msec) {
             try {
                 Thread.sleep(msec);
             } catch (InterruptedException e) {
@@ -337,7 +338,7 @@ public class MainSceneController extends DefaultSceneController {
                 Platform.runLater(MainSceneController.this::fillUserInfo);
 
                 //Push updated data
-                if (ClientApp.contactList != null){
+                if (ClientApp.contactList != null) {
                     int i = contacts.getSelectionModel().getSelectedIndex();
                     contacts.setItems(ClientApp.contactList);
                     contacts.getSelectionModel().select(i);

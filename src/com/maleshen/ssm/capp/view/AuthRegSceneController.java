@@ -2,8 +2,10 @@ package com.maleshen.ssm.capp.view;
 
 import com.maleshen.ssm.capp.ClientApp;
 import com.maleshen.ssm.capp.model.ClientConnector;
+import com.maleshen.ssm.capp.model.PropertiesLoader;
 import com.maleshen.ssm.entity.AuthInfo;
 import com.maleshen.ssm.entity.User;
+import com.maleshen.ssm.template.Flags;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +16,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.WindowEvent;
 
 import java.io.IOException;
-import java.time.*;
+import java.io.OutputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 import static com.maleshen.ssm.capp.ClientApp.primaryStage;
@@ -62,27 +67,45 @@ public class AuthRegSceneController extends DefaultSceneController {
 
     @Override
     @FXML
-    protected void initialize(){}
+    protected void initialize() {
+        if (ClientApp.properties != null) {
+            address.setText(ClientApp.properties.getProperty(Flags.C_SERVER_A));
+            port.setText(ClientApp.properties.getProperty(Flags.C_SERVER_P));
+            login.setText(ClientApp.properties.getProperty(Flags.C_DEF_LOGIN));
+        }
+    }
+
+    private void propertiesSave() throws IOException {
+        ClientApp.properties.setProperty(Flags.C_SERVER_A, address.getText());
+        ClientApp.properties.setProperty(Flags.C_SERVER_P, port.getText());
+        ClientApp.properties.setProperty(Flags.C_DEF_LOGIN, login.getText());
+        OutputStream os = PropertiesLoader.getOutputStream();
+        if (os != null) {
+            ClientApp.properties.store(os, null);
+            os.flush();
+        }
+    }
 
     //Try to connect & auth
     @FXML
     private void connect() throws Exception {
-        try{
+        try {
             Integer.parseInt(port.getText());
         } catch (Exception e) {
             authError.setText("Please, enter correct values.");
         }
-        if (login.getText().equals("") || pass.getText().equals("") || address.getText().equals("")){
+        if (login.getText().equals("") || pass.getText().equals("") || address.getText().equals("")) {
             authError.setText("Please, enter correct values.");
         } else {
             int code = ClientConnector.establishingConnection(new AuthInfo(login.getText(), pass.getText()),
                     address.getText(),
                     Integer.parseInt(port.getText()));
 
-            switch (code){
+            switch (code) {
                 //Authenticated, open Main Window
                 case 0:
                     openMain();
+                    propertiesSave();
                     break;
                 case 1:
                     authError.setText("Error. Pls, check fields.");
@@ -95,7 +118,7 @@ public class AuthRegSceneController extends DefaultSceneController {
     }
 
     @FXML
-    private void regInit(){
+    private void regInit() {
         rBirthDate.setValue(LocalDate.now());
         rAddress.setText(address.getText());
         rPort.setText(port.getText());
@@ -104,25 +127,25 @@ public class AuthRegSceneController extends DefaultSceneController {
     }
 
     @FXML
-    private void regCancel(){
+    private void regCancel() {
         registrationPage.setVisible(false);
         loginPage.setVisible(true);
     }
 
     //Try to connect & register
     @FXML
-    private void regMe(){
+    private void regMe() {
 
         //Validate fields
-        try{
+        try {
             Integer.parseInt(rPort.getText());
         } catch (Exception e) {
             rErrMsg.setText("Pls, check typed values!");
         }
-        if(rLogin.getText().equals("") ||
+        if (rLogin.getText().equals("") ||
                 rPassword.getText().equals("") ||
                 rRePassword.getText().equals("") ||
-                !rPassword.getText().equals(rRePassword.getText())){
+                !rPassword.getText().equals(rRePassword.getText())) {
             rErrMsg.setText("Pls, check typed values!");
         } else {
             //Convert DatePicker to Data
@@ -136,10 +159,11 @@ public class AuthRegSceneController extends DefaultSceneController {
                 int code = ClientConnector.establishingConnection(userForReg,
                         rAddress.getText(), Integer.parseInt(rPort.getText()));
 
-                switch (code){
+                switch (code) {
                     //All is Ok
                     case 0:
                         openMain();
+                        propertiesSave();
                         break;
                     //Not registered
                     case 1:

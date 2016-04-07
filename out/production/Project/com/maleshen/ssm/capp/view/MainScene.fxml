@@ -4,13 +4,11 @@
 <?import javafx.scene.effect.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="500.0" maxWidth="700.0" minHeight="500.0" minWidth="700.0" prefHeight="500.0" prefWidth="700.0" snapToPixel="false" styleClass="background" stylesheets="@style/MainScene.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maleshen.ssm.capp.view.MainSceneController">
+<AnchorPane maxHeight="500.0" maxWidth="700.0" minHeight="500.0" minWidth="700.0" prefHeight="500.0" prefWidth="700.0" snapToPixel="false" styleClass="background" stylesheets="@../../../../../resources/client/style/MainScene.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maleshen.ssm.capp.view.MainSceneController">
     <children>
       <TableView fx:id="contacts" layoutY="73.0" prefHeight="390.0" prefWidth="200.0">
         <columns>
@@ -43,7 +41,7 @@
         </AnchorPane>
         <AnchorPane layoutY="470.0" prefHeight="36.0" prefWidth="200.0" style="-fx-background-color: #FFFFFF;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
             <children>
-                <GridPane alignment="CENTER" layoutY="1.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: #FFF; -fx-border-color: #CCC;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                <GridPane alignment="CENTER" layoutY="1.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="36.0" prefWidth="200.0" style="-fx-background-color: #FFF; -fx-border-color: #CCC;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                     <columnConstraints>
                         <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="100.0" />
@@ -138,7 +136,7 @@
                             <children>
                                 <ImageView fx:id="contactAvatar" blendMode="SRC_ATOP" depthTest="ENABLE" fitHeight="50.0" fitWidth="50.0" preserveRatio="true">
                                     <image>
-                                        <Image url="@noav.png" />
+                                        <Image url="@../../../../../resources/client/img/noav.png" />
                                     </image>
                                 </ImageView>
                             </children>

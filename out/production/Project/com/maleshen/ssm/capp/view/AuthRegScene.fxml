@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="355.0" prefWidth="224.0" styleClass="background" stylesheets="@style/AuthRegScene.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maleshen.ssm.capp.view.AuthRegSceneController">
+<AnchorPane prefHeight="355.0" prefWidth="224.0" styleClass="background" stylesheets="@../../../../../resources/client/style/AuthRegScene.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maleshen.ssm.capp.view.AuthRegSceneController">
     <children>
         <AnchorPane fx:id="loginPage" cacheShape="false" centerShape="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" pickOnBounds="false" prefHeight="355.0" prefWidth="224.0" scaleShape="false" styleClass="background">
             <children>
@@ -76,7 +74,7 @@
                         <Label text="Login:" GridPane.rowIndex="3" />
                         <Label text="Pass:" GridPane.rowIndex="4" />
                         <Label text="Re-type:" GridPane.rowIndex="5" />
-                        <TextField fx:id="rName" styleClass="textField" stylesheets="@style/AuthRegScene.css" GridPane.columnIndex="1" />
+                        <TextField fx:id="rName" styleClass="textField" stylesheets="@../../../../../resources/client/style/AuthRegScene.css" GridPane.columnIndex="1" />
                         <TextField fx:id="rLastName" styleClass="textField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <DatePicker fx:id="rBirthDate" styleClass="textField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <TextField fx:id="rLogin" styleClass="textField" GridPane.columnIndex="1" GridPane.rowIndex="3" />

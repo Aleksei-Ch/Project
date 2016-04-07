@@ -12,9 +12,8 @@ import java.util.Date;
  * The type User.
  */
 public class User {
-    private final Format DATETOSTR = new SimpleDateFormat("MMMM d, yyyy");
     private static final DateFormat DATEFROMSTR = new SimpleDateFormat("MMMM d, yyyy");
-
+    private final Format DATETOSTR = new SimpleDateFormat("MMMM d, yyyy");
     private Integer id;
     private String login;
     private String pass;
@@ -60,11 +59,96 @@ public class User {
         this.birthDate = birthDate;
     }
 
-    public User(String login, String name, String lastName, Date birthDate){
+    public User(String login, String name, String lastName, Date birthDate) {
         this.login = login;
         this.name = name;
         this.lastName = lastName;
         this.birthDate = birthDate;
+    }
+
+    /**
+     * Parse user from string representation of entity
+     *
+     * @param user the String representation of User
+     * @return null if input string not contains pattern
+     * Parsed user if all ok.
+     */
+    public static User getFromString(String user) {
+
+        if (user.split(Flags.USER_SPLITTER).length == 5) {
+
+            //Try parse birthDate
+            //Format: "January 2, 2010"
+            Date birthdate;
+
+            try {
+                birthdate = DATEFROMSTR.parse(user.split(Flags.USER_SPLITTER)[4]);
+            } catch (ParseException e) {
+                birthdate = new Date();
+            }
+
+            return new User(Integer.parseInt(user.split(Flags.USER_SPLITTER)[0]), //id
+                    user.split(Flags.USER_SPLITTER)[1],         //login
+                    user.split(Flags.USER_SPLITTER)[2],         //name
+                    user.split(Flags.USER_SPLITTER)[3],         //lastName
+                    birthdate);                      //birthDate
+        }
+        return null;
+    }
+
+    /**
+     * Parse user from string representation of regInfo
+     * from upper method.
+     *
+     * @param regInfo String representation of regInfo
+     * @return null if input string not contains pattern
+     * Parsed user if all ok.
+     */
+    public static User getUserFromRegInfo(String regInfo) {
+
+        if (regInfo.split(Flags.USER_SPLITTER).length == 5) {
+
+            //Try parse birthDate
+            //Format: "January 2, 2010"
+            Date birthdate;
+
+            try {
+                birthdate = DATEFROMSTR.parse(regInfo.split(Flags.USER_SPLITTER)[4]);
+            } catch (ParseException e) {
+                birthdate = new Date();
+            }
+
+            return new User(regInfo.split(Flags.USER_SPLITTER)[0], //login
+                    regInfo.split(Flags.USER_SPLITTER)[1],         //pass
+                    regInfo.split(Flags.USER_SPLITTER)[2],         //name
+                    regInfo.split(Flags.USER_SPLITTER)[3],         //lastName
+                    birthdate);                      //birthDate
+        }
+        return null;
+    }
+
+    public static User getUserFromUpdateInfo(String updateInfo) {
+
+        if (updateInfo.split(Flags.USER_SPLITTER).length == 4) {
+
+            //Try parse birthDate
+            //Format: "January 2, 2010"
+            Date birthdate;
+
+            try {
+                birthdate = DATEFROMSTR.parse(updateInfo.split(Flags.USER_SPLITTER)[3]);
+            } catch (ParseException e) {
+                birthdate = new Date();
+            }
+
+            return new User(updateInfo.split(Flags.USER_SPLITTER)[0], //login
+                    updateInfo.split(Flags.USER_SPLITTER)[1],         //name
+                    updateInfo.split(Flags.USER_SPLITTER)[2],         //lastname
+                    birthdate);                      //birthDate
+        } else if (updateInfo.split(Flags.USER_SPLITTER).length == 5) {
+            return getUserFromRegInfo(updateInfo);
+        }
+        return null;
     }
 
     public Integer getId() {
@@ -111,18 +195,18 @@ public class User {
         return birthDate;
     }
 
-    public String getBirthDateString(){
-        return (new SimpleDateFormat("dd.MM.yyyy")).format(getBirthDate());
-    }
-
     public void setBirthDate(Date birthDate) {
         this.birthDate = birthDate;
     }
 
-    @Override
-    public String toString(){
+    public String getBirthDateString() {
+        return (new SimpleDateFormat("dd.MM.yyyy")).format(getBirthDate());
+    }
 
-        return  getId() +
+    @Override
+    public String toString() {
+
+        return getId() +
                 Flags.USER_SPLITTER +
                 getLogin() +
                 Flags.USER_SPLITTER +
@@ -134,43 +218,13 @@ public class User {
     }
 
     /**
-     * Parse user from string representation of entity
-     *
-     * @param user the String representation of User
-     * @return null if input string not contains pattern
-     *         Parsed user if all ok.
-     */
-    public static User getFromString(String user){
-
-        if (user.split(Flags.USER_SPLITTER).length == 5){
-
-            //Try parse birthDate
-            //Format: "January 2, 2010"
-            Date birthdate;
-
-            try {
-                birthdate = DATEFROMSTR.parse(user.split(Flags.USER_SPLITTER)[4]);
-            } catch (ParseException e) {
-                birthdate = new Date();
-            }
-
-            return new User(Integer.parseInt(user.split(Flags.USER_SPLITTER)[0]), //id
-                    user.split(Flags.USER_SPLITTER)[1],         //login
-                    user.split(Flags.USER_SPLITTER)[2],         //name
-                    user.split(Flags.USER_SPLITTER)[3],         //lastName
-                    birthdate);                      //birthDate
-        }
-        return null;
-    }
-
-    /**
      * Get reg info string.
      *
      * @return the string
      */
-    public String getRegInfo(){
+    public String getRegInfo() {
 
-        return  getLogin() +
+        return getLogin() +
                 Flags.USER_SPLITTER +
                 getPass() +
                 Flags.USER_SPLITTER +
@@ -181,41 +235,11 @@ public class User {
                 DATETOSTR.format(getBirthDate());
     }
 
-    /**  Parse user from string representation of regInfo
-     *   from upper method.
-     *
-     *   @param regInfo String representation of regInfo
-     *   @return null if input string not contains pattern
-     *           Parsed user if all ok.
-     */
-    public static User getUserFromRegInfo(String regInfo){
+    public String getUpdateInfo() {
 
-        if (regInfo.split(Flags.USER_SPLITTER).length == 5){
-
-            //Try parse birthDate
-            //Format: "January 2, 2010"
-            Date birthdate;
-
-            try {
-                birthdate = DATEFROMSTR.parse(regInfo.split(Flags.USER_SPLITTER)[4]);
-            } catch (ParseException e) {
-                birthdate = new Date();
-            }
-
-            return new User(regInfo.split(Flags.USER_SPLITTER)[0], //login
-                    regInfo.split(Flags.USER_SPLITTER)[1],         //pass
-                    regInfo.split(Flags.USER_SPLITTER)[2],         //name
-                    regInfo.split(Flags.USER_SPLITTER)[3],         //lastName
-                    birthdate);                      //birthDate
-        }
-        return null;
-    }
-
-    public String getUpdateInfo(){
-
-        return  getPass() == null || getPass().equals("")
+        return getPass() == null || getPass().equals("")
                 ?
-                        getLogin() +
+                getLogin() +
                         Flags.USER_SPLITTER +
                         getName() +
                         Flags.USER_SPLITTER +
@@ -223,30 +247,6 @@ public class User {
                         Flags.USER_SPLITTER +
                         DATETOSTR.format(getBirthDate())
                 :
-                        getRegInfo();
-    }
-
-    public static User getUserFromUpdateInfo(String updateInfo){
-
-        if (updateInfo.split(Flags.USER_SPLITTER).length == 4){
-
-            //Try parse birthDate
-            //Format: "January 2, 2010"
-            Date birthdate;
-
-            try {
-                birthdate = DATEFROMSTR.parse(updateInfo.split(Flags.USER_SPLITTER)[3]);
-            } catch (ParseException e) {
-                birthdate = new Date();
-            }
-
-            return new User(updateInfo.split(Flags.USER_SPLITTER)[0], //login
-                    updateInfo.split(Flags.USER_SPLITTER)[1],         //name
-                    updateInfo.split(Flags.USER_SPLITTER)[2],         //lastname
-                    birthdate);                      //birthDate
-        } else if (updateInfo.split(Flags.USER_SPLITTER).length == 5) {
-            return getUserFromRegInfo(updateInfo);
-        }
-        return null;
+                getRegInfo();
     }
 }

@@ -6,14 +6,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Message {
+    private static final String regexp = "^(([0,1][0-9])|(2[0-3])):[0-5][0-9]$";
     private final String msg;
     private final String fromUser;
     private final String toUser;
+    private final Pattern timePatt = Pattern.compile(regexp);
     private int id = 0;
     private String time;
-
-    private static final String regexp = "^(([0,1][0-9])|(2[0-3])):[0-5][0-9]$";
-    private final Pattern timePatt = Pattern.compile(regexp);
     private Matcher matcher;
 
     public Message(String fromUser, String toUser, String msg, String time) {
@@ -22,6 +21,31 @@ public class Message {
         this.toUser = toUser;
         matcher = timePatt.matcher(time);
         this.time = matcher.matches() ? time : "00:00";
+    }
+
+    public static Message getFromString(String msg) {
+        String[] parser = msg.split(Flags.MESSAGE_SPLITTER);
+
+        if (parser.length >= 4) {
+            String time = parser[0];
+            String fromUser = parser[1];
+            String toUser = parser[2];
+            String message = "";
+            if (parser.length > 4) {
+                for (int i = 3; i < parser.length; i++) {
+                    message = parser[i];
+                    if (i != parser.length - 1) {
+                        message = message + Flags.MESSAGE_SPLITTER;
+                    }
+                }
+            } else {
+                message = parser[3];
+            }
+            if (fromUser != null && toUser != null) {
+                return new Message(fromUser, toUser, message, time);
+            }
+        }
+        return null;
     }
 
     /**
@@ -51,11 +75,9 @@ public class Message {
         return msg;
     }
 
-
-
     @Override
-    public String toString(){
-        return  getTime() +
+    public String toString() {
+        return getTime() +
                 Flags.MESSAGE_SPLITTER +
                 getFromUser() +
                 Flags.MESSAGE_SPLITTER +
@@ -64,29 +86,13 @@ public class Message {
                 getMsg();
     }
 
-    public static Message getFromString(String msg){
-        String[] parser = msg.split(Flags.MESSAGE_SPLITTER);
-
-        if (parser.length >= 4){
-            String time = parser[0];
-            String fromUser = parser[1];
-            String toUser = parser[2];
-            String message = "";
-            if (parser.length > 4){
-                for (int i = 3; i < parser.length; i++){
-                    message = parser[i];
-                    if (i != parser.length - 1){
-                        message = message + Flags.MESSAGE_SPLITTER;
-                    }
-                }
-            } else {
-                message = parser[3];
-            }
-            if (fromUser != null && toUser != null){
-                return new Message(fromUser, toUser, message, time);
-            }
-        }
-        return null;
+    /**
+     * Gets id.
+     *
+     * @return Value of id.
+     */
+    public int getId() {
+        return id;
     }
 
     /**
@@ -99,14 +105,13 @@ public class Message {
     }
 
     /**
-     * Gets id.
+     * Gets time.
      *
-     * @return Value of id.
+     * @return Value of time.
      */
-    public int getId() {
-        return id;
+    public String getTime() {
+        return time;
     }
-
 
     /**
      * Sets new time.
@@ -116,14 +121,5 @@ public class Message {
     public void setTime(String time) {
         matcher = timePatt.matcher(time);
         this.time = matcher.matches() ? time : "00:00";
-    }
-
-    /**
-     * Gets time.
-     *
-     * @return Value of time.
-     */
-    public String getTime() {
-        return time;
     }
 }

@@ -15,7 +15,7 @@ public class AuthenticationImpl implements Authentication {
         try {
             User user = DBWorker.getUserByLogin(authInfo.getLogin());
             //Validate pass
-            if (user == null){
+            if (user == null) {
                 return null;
             } else {
                 return Crypt.check(authInfo.getPass(), user.getPass()) ? user : null;

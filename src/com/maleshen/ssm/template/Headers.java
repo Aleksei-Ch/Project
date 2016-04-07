@@ -1,7 +1,8 @@
 package com.maleshen.ssm.template;
 
-/** Class contains constant values of
- *  message headers.
+/**
+ * Class contains constant values of
+ * message headers.
  */
 public class Headers {
     //Authentication and registration headers
