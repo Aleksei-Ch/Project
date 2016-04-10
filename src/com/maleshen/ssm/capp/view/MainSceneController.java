@@ -94,6 +94,7 @@ public class MainSceneController extends DefaultSceneController {
         } else {
             //TODO. Contact request
             dialogs.put(message.getFromUser(), FXCollections.observableArrayList());
+
             dialogs.get(message.getFromUser()).add(message);
         }
     }
@@ -384,7 +385,7 @@ public class MainSceneController extends DefaultSceneController {
                 //Wait for a two second
                 wait(2000);
 
-//                Platform.runLater(MainSceneController::fillUserInfo);
+                Platform.runLater(MainSceneController.this::fillUserInfo);
 
                 //Push updated data
                 if (ClientApp.contactList != null && ClientApp.contactList.size() > 0) {

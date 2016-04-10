@@ -3,6 +3,7 @@ package com.maleshen.ssm.capp.view;
 import com.maleshen.ssm.capp.ClientApp;
 import com.maleshen.ssm.capp.model.ClientConnector;
 import com.maleshen.ssm.entity.User;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -12,6 +13,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+import java.text.ParseException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -91,10 +94,11 @@ public class InfoSceneController extends DefaultSceneController {
     }
 
     @FXML
-    private void update() {
+    private void update() throws ParseException {
         if (checkFields()) {
             infoString.setText("");
-            Date bd = Date.from(LocalDateTime.from(
+            Date bd = bitrhdate.getValue() == null ? User.getDateFromString(bitrhdate.getEditor().getText()) :
+                    Date.from(LocalDateTime.from(
                     bitrhdate.getValue().atStartOfDay()).atZone(ZoneId.systemDefault()).toInstant());
 
             User updatedUser = pass.getText().equals("") ?

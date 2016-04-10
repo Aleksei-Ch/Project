@@ -200,7 +200,11 @@ public class User {
     }
 
     public String getBirthDateString() {
-        return (new SimpleDateFormat("dd.MM.yyyy")).format(getBirthDate());
+        return (new SimpleDateFormat("dd.MM.yyyy")).format(getBirthDate()) + "\n";
+    }
+
+    public static Date getDateFromString(String s) throws ParseException {
+        return (new SimpleDateFormat("dd.MM.yyyy")).parse(s);
     }
 
     @Override

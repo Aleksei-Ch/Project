@@ -1,6 +1,5 @@
 package com.maleshen.ssm.sapp.model;
 
-import com.maleshen.ssm.sapp.model.logic.SSMCleaner;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -15,25 +14,22 @@ import java.security.KeyStore;
 
 public final class ServerConfigurator {
 
-    static final int PORT = Integer.parseInt(System.getProperty("port", "8887"));
+    private static final int PORT = Integer.parseInt(System.getProperty("port", "8887"));
+    private static final String STOREPASS = "ssmssm";
+    private static final String KEYPASS = "simple";
 
     public void start() throws Exception {
 
-        char[] storepass = "ssmssm".toCharArray();
-        char[] keypass = "simple".toCharArray();
-
         KeyStore ks = KeyStore.getInstance("JKS");
-        ks.load(getClass().getResource("/resources/cert/ssm.jks").openStream(), storepass);
+        ks.load(getClass().getResource("/resources/cert/ssm.jks").openStream(), STOREPASS.toCharArray());
 
         KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
-        kmf.init(ks, keypass);
+        kmf.init(ks, KEYPASS.toCharArray());
 
-        SslContext sslCtx = SslContextBuilder.forServer(kmf).ciphers(null).build();
+        SslContext sslCtx = SslContextBuilder.forServer(kmf).build();
 
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
-
-        new SSMCleaner();
 
         try {
             ServerBootstrap b = new ServerBootstrap();
