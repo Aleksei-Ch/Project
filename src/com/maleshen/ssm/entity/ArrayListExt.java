@@ -13,7 +13,8 @@ public class ArrayListExt<User> extends ArrayList<User> {
         String[] entities = s.split(Flags.ARRAYLISTEXT_SPLITTER);
 
         for (String entity : entities) {
-            contacts.add(com.maleshen.ssm.entity.User.getFromString(entity));
+            if (!entity.equals(""))
+                contacts.add(com.maleshen.ssm.entity.User.getFromString(entity));
         }
         return contacts;
     }

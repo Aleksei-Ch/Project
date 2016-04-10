@@ -9,16 +9,26 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
-import io.netty.handler.ssl.util.SelfSignedCertificate;
+
+import javax.net.ssl.KeyManagerFactory;
+import java.security.KeyStore;
 
 public final class ServerConfigurator {
 
     static final int PORT = Integer.parseInt(System.getProperty("port", "8887"));
 
-    public static void start() throws Exception {
-        SelfSignedCertificate ssc = new SelfSignedCertificate();
-        SslContext sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey())
-                .build();
+    public void start() throws Exception {
+
+        char[] storepass = "ssmssm".toCharArray();
+        char[] keypass = "simple".toCharArray();
+
+        KeyStore ks = KeyStore.getInstance("JKS");
+        ks.load(getClass().getResource("/resources/cert/ssm.jks").openStream(), storepass);
+
+        KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+        kmf.init(ks, keypass);
+
+        SslContext sslCtx = SslContextBuilder.forServer(kmf).ciphers(null).build();
 
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();

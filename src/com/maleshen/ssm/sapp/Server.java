@@ -5,6 +5,8 @@ import com.maleshen.ssm.sapp.model.ServerConfigurator;
 public class Server {
     public static void main(String[] args) throws Exception {
         System.err.println("SSM Server starting...\n");
-        ServerConfigurator.start();
+
+        (new ServerConfigurator()).start();
+
     }
 }

@@ -1,6 +1,8 @@
 package com.maleshen.ssm.capp.model;
 
+import com.maleshen.ssm.capp.ClientApp;
 import com.maleshen.ssm.capp.model.security.MsgManager;
+import com.maleshen.ssm.capp.view.AuthRegSceneController;
 import com.maleshen.ssm.entity.AuthInfo;
 import com.maleshen.ssm.entity.User;
 import com.maleshen.ssm.template.Headers;
@@ -11,9 +13,13 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
-import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 
-import javax.net.ssl.SSLException;
+import javax.net.ssl.TrustManagerFactory;
+import java.io.IOException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.util.concurrent.TimeUnit;
 
 public class ClientConnector {
@@ -27,14 +33,23 @@ public class ClientConnector {
     private static Channel ch;
     private static Bootstrap b;
     private static EventLoopGroup group;
+    private static TrustManagerFactory tmf;
 
-    public ClientConnector() throws SSLException {
+    public ClientConnector() throws IOException, CertificateException, NoSuchAlgorithmException, KeyStoreException {
     }
 
-    private static void init() {
+    private static void init() throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
         ch = null;
         b = new Bootstrap();
         group = new NioEventLoopGroup();
+
+        char[] passphrase = "ssmssm".toCharArray();
+
+        KeyStore ks = KeyStore.getInstance("JKS");
+        ks.load(ClientApp.class.getResource("/resources/cert/ssmclientts.jks").openStream(), passphrase);
+
+        tmf = TrustManagerFactory.getInstance("SunX509");
+        tmf.init(ks);
     }
 
     public static void close() {
@@ -42,35 +57,39 @@ public class ClientConnector {
         ch.disconnect();
     }
 
-    private static boolean authentication(AuthInfo authInfo, Channel ch) throws InterruptedException {
+    private static int authentication(AuthInfo authInfo, Channel ch) throws InterruptedException {
 
         answered = false;
         ch.writeAndFlush(MsgManager.createMsg(Headers.AUTH, authInfo.toString()));
 
         //Waiting for answer.
         do {
+            if (AuthRegSceneController.sslErr)
+                return 2;
             if (!answered) {
                 TimeUnit.SECONDS.sleep(1);
             }
         } while (!answered);
 
-        return authenticated;
+        return authenticated ? 0 : 1;
     }
 
-    private static boolean registration(User user, Channel ch) throws InterruptedException {
+    private static int registration(User user, Channel ch) throws InterruptedException {
 
         answered = false;
         ch.writeAndFlush(MsgManager.createMsg(Headers.REG, user.getRegInfo()));
 
         //Waiting for answer.
         do {
-            if (!answered) {
+            if (AuthRegSceneController.sslErr)
+                return 2;
+            if (!answered)
                 TimeUnit.SECONDS.sleep(1);
-            }
         } while (!answered);
 
-        return registered;
+        return registered ? 0 : 1;
     }
+
 
     /**
      * Try to establishing connection with server and try auth user
@@ -80,7 +99,8 @@ public class ClientConnector {
      * @param port     server port
      * @return value 0 if auth complete,
      * 1 if auth failed,
-     * 2 if connection not established
+     * 2 if ssl connection wrong
+     * -1 if not connected
      */
     public static int establishingConnection(AuthInfo authInfo, String host, int port) throws Exception {
 
@@ -90,7 +110,7 @@ public class ClientConnector {
 
         try {
             SslContext sslCtx = SslContextBuilder.forClient()
-                    .trustManager(InsecureTrustManagerFactory.INSTANCE).build();
+                    .trustManager(tmf).build();
 
             b.group(group)
                     .channel(NioSocketChannel.class)
@@ -98,14 +118,16 @@ public class ClientConnector {
 
             ch = b.connect(HOST, PORT).sync().channel();
 
-            if (authentication(authInfo, ch)) {
+            int code = authentication(authInfo, ch);
+
+            if (code == 0) {
                 return 0;
             } else {
                 group.shutdownGracefully();
-                return 1;
+                return code;
             }
         } catch (Exception e) {
-            return 2;
+            return -1;
         }
     }
 
@@ -117,7 +139,8 @@ public class ClientConnector {
      * @param port server port
      * @return value 0 if registration complete,
      * 1 if registration failed,
-     * 2 if connection not established
+     * 2 if ssl connection wrong
+     * -1 if not connected
      */
     public static int establishingConnection(User user, String host, int port) throws Exception {
 
@@ -127,7 +150,7 @@ public class ClientConnector {
 
         try {
             SslContext sslCtx = SslContextBuilder.forClient()
-                    .trustManager(InsecureTrustManagerFactory.INSTANCE).build();
+                    .trustManager(tmf).build();
 
             b.group(group)
                     .channel(NioSocketChannel.class)
@@ -135,14 +158,16 @@ public class ClientConnector {
 
             ch = b.connect(HOST, PORT).sync().channel();
 
-            if (registration(user, ch)) {
+            int code = registration(user, ch);
+
+            if (code == 0) {
                 return 0;
             } else {
                 group.shutdownGracefully();
-                return 1;
+                return code;
             }
         } catch (Exception e) {
-            return 2;
+            return -1;
         }
     }
 

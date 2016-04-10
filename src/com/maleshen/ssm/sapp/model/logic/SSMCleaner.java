@@ -1,6 +1,7 @@
 package com.maleshen.ssm.sapp.model.logic;
 
 import com.maleshen.ssm.sapp.model.ServerChannelsHandler;
+import io.netty.channel.Channel;
 
 // This class looks for unactive channels and remove it
 // every minute.
@@ -25,11 +26,14 @@ public class SSMCleaner implements Runnable {
     @Override
     public void run() {
         while (true) {
-            if (ServerChannelsHandler.users != null)
-                ServerChannelsHandler.users.keySet().stream().filter(c -> !c.isActive()).forEach(c -> {
-                    ServerChannelsHandler.users.remove(c);
-                    ServerChannelsHandler.channels.remove(c);
-                });
+            if (ServerChannelsHandler.users != null) {
+                for (Channel c : ServerChannelsHandler.users.keySet()){
+                    if (!c.isActive()){
+                        ServerChannelsHandler.users.remove(c);
+                        ServerChannelsHandler.channels.remove(c);
+                    }
+                }
+            }
             //Wait for a minute
             wait(60000);
         }

@@ -21,8 +21,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -36,6 +38,8 @@ public class MainSceneController extends DefaultSceneController {
     //Dialogs
     static Map<String, ObservableList<Message>> dialogs = new HashMap();
     static boolean findIsOpen = false;
+    static boolean settingsIsOpen = false;
+
     @FXML
     private ImageView avatar;
     @FXML
@@ -81,6 +85,7 @@ public class MainSceneController extends DefaultSceneController {
     private TableColumn<Message, String> msgTime;
     //Find contacts scene
     private Stage findAddContactsStage = new Stage();
+    private Stage settingsStage = new Stage();
     private Stage infoStage = new Stage();
 
     public static void getMessage(Message message) {
@@ -138,6 +143,28 @@ public class MainSceneController extends DefaultSceneController {
 
         //TODO. Avatars.
         avatar.setImage(new Image(String.valueOf(getClass().getResource("/resources/client/img/noav.png"))));
+
+        message.setCellFactory(new Callback<TableColumn<Message, String>, TableCell<Message, String>>() {
+            @Override
+            public TableCell<Message, String> call(TableColumn<Message, String> param) {
+                return new TableCell<Message, String>() {
+                    private Text text;
+
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (!isEmpty()) {
+                            text = new Text(item);
+                            text.wrappingWidthProperty().bind(getTableColumn().widthProperty());
+                            text.fontProperty().bind(fontProperty());
+                            setGraphic(text);
+                        } else {
+                            setGraphic(null);
+                        }
+                    }
+                };
+            }
+        });
 
         //Put contacts into the table
         contactName.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLogin()));
@@ -245,7 +272,7 @@ public class MainSceneController extends DefaultSceneController {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(ClientApp.class.getResource("view/FindContactsScene.fxml"));
 
-            Parent parent = loader.load();
+            Parent parent = (Parent) loader.load();
 
             findAddContactsStage.setScene(new Scene(parent));
             findAddContactsStage.setResizable(false);
@@ -264,7 +291,7 @@ public class MainSceneController extends DefaultSceneController {
     private void logout() throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(ClientApp.class.getResource("view/AuthRegScene.fxml"));
-        Parent parent = loader.load();
+        Parent parent = (Parent) loader.load();
 
         ClientConnector.authenticated = false;
         ClientConnector.close();
@@ -289,7 +316,7 @@ public class MainSceneController extends DefaultSceneController {
 
         Parent parent = null;
         try {
-            parent = loader.load();
+            parent = (Parent) loader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -298,6 +325,28 @@ public class MainSceneController extends DefaultSceneController {
         infoStage.setScene(new Scene(parent));
         infoStage.setResizable(false);
         infoStage.show();
+    }
+
+    @FXML
+    private void settings() throws IOException {
+        if (!settingsStage.isShowing()) {
+            settingsIsOpen = true;
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(ClientApp.class.getResource("view/SettingsScene.fxml"));
+
+            Parent parent = (Parent) loader.load();
+
+            settingsStage.setScene(new Scene(parent));
+            settingsStage.setResizable(false);
+            settingsStage.show();
+            settingsStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                @Override
+                public void handle(WindowEvent event) {
+                    settingsStage.close();
+                    settingsIsOpen = false;
+                }
+            });
+        }
     }
 
     /**
@@ -335,19 +384,21 @@ public class MainSceneController extends DefaultSceneController {
                 //Wait for a two second
                 wait(2000);
 
-                Platform.runLater(MainSceneController.this::fillUserInfo);
+//                Platform.runLater(MainSceneController::fillUserInfo);
 
                 //Push updated data
-                if (ClientApp.contactList != null) {
+                if (ClientApp.contactList != null && ClientApp.contactList.size() > 0) {
                     int i = contacts.getSelectionModel().getSelectedIndex();
                     contacts.setItems(ClientApp.contactList);
                     contacts.getSelectionModel().select(i);
                 }
-                //Setting up dialogs
-                if (ClientApp.contactList != null)
-                    ClientApp.contactList.stream().filter(
-                            user -> !dialogs.containsKey(user.getLogin())).forEach(
-                            user -> dialogs.put(user.getLogin(), FXCollections.observableArrayList()));
+//                Setting up dialogs
+                if (ClientApp.contactList != null && ClientApp.contactList.size() > 0) {
+                    ClientApp.contactList.stream().filter(u -> !dialogs.containsKey(u.getLogin())).forEach(u -> {
+                        dialogs.put(u.getLogin(), FXCollections.observableArrayList());
+                    });
+                }
+
                 //Wait for a 30 sec
                 wait(30000);
             }

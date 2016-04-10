@@ -65,7 +65,7 @@ public class ServerChannelsHandler extends SimpleChannelInboundHandler<String> {
             }
         }
 
-        //If message is not authinfo - it must be registration info.
+        //If message is not authinfo - look for registration info
         if (message.startsWith(Headers.REG)) {
 
             message = MsgManager.getMsgData(Headers.REG, message);
@@ -168,7 +168,8 @@ public class ServerChannelsHandler extends SimpleChannelInboundHandler<String> {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (message.startsWith(Headers.REM_CONTACT)) {
+        } else
+        if (message.startsWith(Headers.REM_CONTACT)) {
             try {
                 message = MsgManager.getMsgData(Headers.REM_CONTACT, message);
 
@@ -198,8 +199,6 @@ public class ServerChannelsHandler extends SimpleChannelInboundHandler<String> {
         if (!users.keySet().contains(ctx.channel())) {
             authOrReg(ctx.channel(), msg);
         } else
-
-            //Look for request List contacts
             if (msg.startsWith(Headers.CONTACT_LIST)) {
                 sendContacts(ctx.channel());
             } else if (msg.startsWith(Headers.MSG)) {

@@ -2,25 +2,28 @@
 
 <?import java.lang.*?>
 <?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
 <AnchorPane maxHeight="500.0" maxWidth="700.0" minHeight="500.0" minWidth="700.0" prefHeight="500.0" prefWidth="700.0" snapToPixel="false" styleClass="background" stylesheets="@../../../../../resources/client/style/MainScene.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.maleshen.ssm.capp.view.MainSceneController">
     <children>
-      <TableView fx:id="contacts" layoutY="73.0" prefHeight="390.0" prefWidth="200.0">
-        <columns>
-          <TableColumn fx:id="contactName" editable="false" maxWidth="190.0" minWidth="177.0" prefWidth="182.0" resizable="false" text="C1" />
-        </columns>
-      </TableView>
+        <TableView fx:id="contacts" layoutY="73.0" prefHeight="390.0" prefWidth="200.0">
+            <columns>
+                <TableColumn fx:id="contactName" editable="false" maxWidth="190.0" minWidth="177.0" prefWidth="182.0" resizable="false" text="C1" />
+            </columns>
+        </TableView>
         <AnchorPane prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #DDDDDD;" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
                 <Pane blendMode="SRC_ATOP" layoutX="14.0" layoutY="20.0" prefHeight="60.0" prefWidth="60.0" style="-fx-background-color: #000; -fx-background-radius: 100;">
-               <children>
+                    <children>
                         <ImageView fx:id="avatar" blendMode="SRC_ATOP" depthTest="ENABLE" fitHeight="60.0" fitWidth="60.0" onMouseClicked="#initialize" preserveRatio="true" />
-               </children>
+                    </children>
                 </Pane>
                 <Label fx:id="name" layoutX="80.0" layoutY="19.0" prefHeight="20.0" prefWidth="100.0" text="Name">
                     <font>
@@ -52,26 +55,26 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                  <Button fx:id="add" alignment="CENTER" mnemonicParsing="false" onAction="#findAddContact" styleClass="menuButton" textAlignment="CENTER">
-                     <GridPane.margin>
-                        <Insets />
-                     </GridPane.margin>
-                  </Button>
-                  <Button fx:id="info" mnemonicParsing="false" onAction="#info" styleClass="menuButton" GridPane.columnIndex="1">
-                     <GridPane.margin>
-                        <Insets />
-                     </GridPane.margin>
-                  </Button>
-                  <Button fx:id="exit" mnemonicParsing="false" onAction="#logout" styleClass="menuButton" GridPane.columnIndex="3">
-                     <GridPane.margin>
-                        <Insets />
-                     </GridPane.margin>
-                  </Button>
-                  <Button fx:id="settings" mnemonicParsing="false" styleClass="menuButton" GridPane.columnIndex="2">
-                     <GridPane.margin>
-                        <Insets />
-                     </GridPane.margin>
-                  </Button>
+                        <Button fx:id="add" alignment="CENTER" mnemonicParsing="false" onAction="#findAddContact" styleClass="menuButton" textAlignment="CENTER">
+                            <GridPane.margin>
+                                <Insets />
+                            </GridPane.margin>
+                        </Button>
+                        <Button fx:id="info" mnemonicParsing="false" onAction="#info" styleClass="menuButton" GridPane.columnIndex="1">
+                            <GridPane.margin>
+                                <Insets />
+                            </GridPane.margin>
+                        </Button>
+                        <Button fx:id="exit" mnemonicParsing="false" onAction="#logout" styleClass="menuButton" GridPane.columnIndex="3">
+                            <GridPane.margin>
+                                <Insets />
+                            </GridPane.margin>
+                        </Button>
+                        <Button fx:id="settings" mnemonicParsing="false" onAction="#settings" styleClass="menuButton" GridPane.columnIndex="2">
+                            <GridPane.margin>
+                                <Insets />
+                            </GridPane.margin>
+                        </Button>
                     </children>
                 </GridPane>
             </children>
@@ -153,12 +156,12 @@
                         </Label>
                     </children>
                 </AnchorPane>
-                <TextArea fx:id="msg" focusTraversable="false" layoutX="8.0" layoutY="426.0" pickOnBounds="false" prefHeight="60.0" prefWidth="420.0">
+                <TextArea fx:id="msg" focusTraversable="false" layoutX="8.0" layoutY="426.0" pickOnBounds="false" prefHeight="60.0" prefWidth="420.0" wrapText="true">
                     <font>
                         <Font name="Tahoma" size="12.0" />
                     </font>
                 </TextArea>
-            <Button fx:id="send" layoutX="428.0" layoutY="426.0" mnemonicParsing="false" onAction="#sendMessage" prefHeight="60.0" prefWidth="62.0" />
+                <Button fx:id="send" layoutX="428.0" layoutY="426.0" mnemonicParsing="false" onAction="#sendMessage" prefHeight="60.0" prefWidth="62.0" />
             </children>
         </AnchorPane>
     </children>

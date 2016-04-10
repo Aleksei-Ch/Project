@@ -2,6 +2,7 @@ package com.maleshen.ssm.capp.model;
 
 import com.maleshen.ssm.capp.ClientApp;
 import com.maleshen.ssm.capp.model.security.MsgManager;
+import com.maleshen.ssm.capp.view.AuthRegSceneController;
 import com.maleshen.ssm.capp.view.FindAddContactsController;
 import com.maleshen.ssm.capp.view.MainSceneController;
 import com.maleshen.ssm.entity.ArrayListExt;
@@ -42,6 +43,7 @@ class ClientChanelHandler extends SimpleChannelInboundHandler<String> {
                 msg = MsgManager.getMsgData(Headers.CONTACT_LIST, msg);
                 //Init
                 ClientApp.contactList = FXCollections.observableArrayList();
+
                 //Fill
                 ClientApp.contactList.addAll(ArrayListExt.getFromString(msg));
             }
@@ -63,7 +65,8 @@ class ClientChanelHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        cause.printStackTrace();
+        AuthRegSceneController.sslErr = true;
+//        cause.printStackTrace();
         ctx.close();
     }
 }

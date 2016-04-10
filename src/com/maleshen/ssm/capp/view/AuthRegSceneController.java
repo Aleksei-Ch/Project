@@ -25,6 +25,7 @@ import java.util.Date;
 import static com.maleshen.ssm.capp.ClientApp.primaryStage;
 
 public class AuthRegSceneController extends DefaultSceneController {
+    public static boolean sslErr = false;
     //Login page
     @FXML
     private AnchorPane loginPage;
@@ -42,7 +43,6 @@ public class AuthRegSceneController extends DefaultSceneController {
     private Button auth;
     @FXML
     private Button registration;
-
     //Registration page
     @FXML
     private AnchorPane registrationPage;
@@ -65,6 +65,10 @@ public class AuthRegSceneController extends DefaultSceneController {
     @FXML
     private TextField rPort;
 
+    public static void sslError() {
+        sslErr = true;
+    }
+
     @Override
     @FXML
     protected void initialize() {
@@ -86,14 +90,25 @@ public class AuthRegSceneController extends DefaultSceneController {
         }
     }
 
+    private boolean chkport(int i) {
+        try {
+            int p = i == 0 ? Integer.valueOf(port.getText()) : Integer.valueOf(rPort.getText());
+            if (p < 0 || p > 65535) {
+                throw new Exception();
+            }
+            return true;
+        } catch (Exception e) {
+            authError.setText("Port is wrong.");
+            rErrMsg.setText("Port is wrong.");
+            return false;
+        }
+    }
+
     //Try to connect & auth
     @FXML
     private void connect() throws Exception {
-        try {
-            Integer.parseInt(port.getText());
-        } catch (Exception e) {
-            authError.setText("Please, enter correct values.");
-        }
+        if (!chkport(0))
+            return;
         if (login.getText().equals("") || pass.getText().equals("") || address.getText().equals("")) {
             authError.setText("Please, enter correct values.");
         } else {
@@ -108,7 +123,10 @@ public class AuthRegSceneController extends DefaultSceneController {
                     propertiesSave();
                     break;
                 case 1:
-                    authError.setText("Error. Pls, check fields.");
+                    authError.setText("Auth error. Pls, check fields.");
+                    break;
+                case 2:
+                    authError.setText("(!) SSL CONNECTION WRONG!");
                     break;
                 default:
                     authError.setText("Check server and port.");
@@ -137,11 +155,8 @@ public class AuthRegSceneController extends DefaultSceneController {
     private void regMe() {
 
         //Validate fields
-        try {
-            Integer.parseInt(rPort.getText());
-        } catch (Exception e) {
-            rErrMsg.setText("Pls, check typed values!");
-        }
+        if (!chkport(1))
+            return;
         if (rLogin.getText().equals("") ||
                 rPassword.getText().equals("") ||
                 rRePassword.getText().equals("") ||
@@ -169,7 +184,9 @@ public class AuthRegSceneController extends DefaultSceneController {
                     case 1:
                         rErrMsg.setText("Something wrong. Try another values.");
                         break;
-                    //Another problem
+                    case 2:
+                        authError.setText("(!) SSL CONNECTION WRONG!");
+                        break;
                     default:
                         rErrMsg.setText("Server not found.");
                         break;
